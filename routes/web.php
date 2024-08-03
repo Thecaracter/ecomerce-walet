@@ -31,6 +31,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth-regist
 Route::middleware(['check.is.logged.in'])->group(function () {
     //Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/top-selling-products', [DashboardController::class, 'topSellingProducts']);
 
     // Product routes
     Route::get('/product', [ProductController::class, 'index'])->name('product.index');
