@@ -20,4 +20,9 @@ class Product extends Model
         'foto',
         'is_active',
     ];
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 }

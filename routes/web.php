@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\user\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
@@ -18,9 +19,7 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('auth-login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
