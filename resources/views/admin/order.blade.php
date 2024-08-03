@@ -112,7 +112,7 @@
                                                             action="{{ route('order.updateStatus', $order->id) }}"
                                                             method="POST" style="display:inline;">
                                                             @csrf
-                                                            <input type="hidden" name="status" value="selesai">
+                                                            <input type="hidden" name="status" value="diterima">
                                                             <button type="submit" class="btn btn-success">Selesai</button>
                                                         </form>
                                                     @endif

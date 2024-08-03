@@ -35,7 +35,7 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pengiriman,ditolak',
+            'status' => 'required|in:pengiriman,ditolak,diterima',
         ]);
 
         try {
@@ -50,6 +50,8 @@ class OrderController extends Controller
 
             } elseif ($newStatus === 'ditolak') {
                 return redirect()->back()->with('success', "Order status updated to ditolak successfully.");
+            } elseif ($newStatus === 'diterima') {
+                return redirect()->back()->with('success', "Order status updated to diterima successfully.");
             }
 
         } catch (\Exception $e) {

@@ -21,8 +21,8 @@
                                 </div>
                                 <div class="col col-stats ms-3 ms-sm-0">
                                     <div class="numbers">
-                                        <p class="card-category">Visitors</p>
-                                        <h4 class="card-title">1,294</h4>
+                                        <p class="card-category">User</p>
+                                        <h4 class="card-title">{{ $userCount }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -40,8 +40,8 @@
                                 </div>
                                 <div class="col col-stats ms-3 ms-sm-0">
                                     <div class="numbers">
-                                        <p class="card-category">Subscribers</p>
-                                        <h4 class="card-title">1303</h4>
+                                        <p class="card-category">Product</p>
+                                        <h4 class="card-title">{{ $productCount }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -59,8 +59,8 @@
                                 </div>
                                 <div class="col col-stats ms-3 ms-sm-0">
                                     <div class="numbers">
-                                        <p class="card-category">Sales</p>
-                                        <h4 class="card-title">$ 1,345</h4>
+                                        <p class="card-category">Transaksi</p>
+                                        <h4 class="card-title">{{ $orderCount }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -78,8 +78,8 @@
                                 </div>
                                 <div class="col col-stats ms-3 ms-sm-0">
                                     <div class="numbers">
-                                        <p class="card-category">Order</p>
-                                        <h4 class="card-title">576</h4>
+                                        <p class="card-category">Transaksi Selesai</p>
+                                        <h4 class="card-title">{{ $orderSuccessCount }}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -92,28 +92,14 @@
                     <div class="card card-round">
                         <div class="card-header">
                             <div class="card-head-row">
-                                <div class="card-title">User Statistics</div>
-                                <div class="card-tools">
-                                    <a href="#" class="btn btn-label-success btn-round btn-sm me-2">
-                                        <span class="btn-label">
-                                            <i class="fa fa-pencil"></i>
-                                        </span>
-                                        Export
-                                    </a>
-                                    <a href="#" class="btn btn-label-info btn-round btn-sm">
-                                        <span class="btn-label">
-                                            <i class="fa fa-print"></i>
-                                        </span>
-                                        Print
-                                    </a>
-                                </div>
+                                <div class="card-title">Order Success Statistics</div>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="chart-container" style="min-height: 375px">
-                                <canvas id="statisticsChart"></canvas>
+                                <canvas id="orderSuccessChart"></canvas>
                             </div>
-                            <div id="myChartLegend"></div>
+                            <div id="orderSuccessChartLegend"></div>
                         </div>
                     </div>
                 </div>
@@ -531,4 +517,44 @@
             });
         </script>
     @endif
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var orderSuccessCtx = document.getElementById('orderSuccessChart').getContext('2d');
+            var orderSuccessChart = new Chart(orderSuccessCtx, {
+                type: 'line',
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                        'September', 'October', 'November', 'December'
+                    ],
+                    datasets: [{
+                        label: 'Orders Received',
+                        data: @json(array_values($orderSuccessStatistics)),
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Month'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Count'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 @endsection
