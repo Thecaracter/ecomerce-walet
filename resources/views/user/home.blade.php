@@ -179,7 +179,7 @@
     <!-- service_area_end -->
 
     <!-- adapt_area_start  -->
-    <<div class="container-fluid py-5" style="background-color: #F8F9FA;">
+    <div class="container-fluid py-5" style="background-color: #F8F9FA;">
         <div class="row justify-content-center align-items-center text-center">
             <div class="col-lg-5 mb-4 mb-lg-0">
                 <h3><span>Perkembangan Kami</span></h3>
@@ -194,7 +194,9 @@
                         <div class="p-4 border rounded shadow-sm"
                             style="background-color: #FFFFFF; border-color: #F44A40;">
                             <i class="fas fa-boxes fa-3x mb-3" style="color: #F44A40;"></i>
-                            <h3 class="counter" style="font-size: 2.5rem; font-weight: bold; color: #F44A40;">1,500
+                            <h3 id="productCount" class="counter"
+                                style="font-size: 2.5rem; font-weight: bold; color: #F44A40;">
+                                {{ $productCount }}
                             </h3>
                             <p>Produk Tersedia</p>
                         </div>
@@ -204,7 +206,9 @@
                         <div class="p-4 border rounded shadow-sm"
                             style="background-color: #FFFFFF; border-color: #F44A40;">
                             <i class="fas fa-shopping-cart fa-3x mb-3" style="color: #F44A40;"></i>
-                            <h3 class="counter" style="font-size: 2.5rem; font-weight: bold; color: #F44A40;">20,000
+                            <h3 id="totalSoldQuantity" class="counter"
+                                style="font-size: 2.5rem; font-weight: bold; color: #F44A40;">
+                                {{ $totalSoldQuantity }}
                             </h3>
                             <p>Produk Terjual</p>
                         </div>
@@ -214,7 +218,9 @@
                         <div class="p-4 border rounded shadow-sm"
                             style="background-color: #FFFFFF; border-color: #F44A40;">
                             <i class="fas fa-users fa-3x mb-3" style="color: #F44A40;"></i>
-                            <h3 class="counter" style="font-size: 2.5rem; font-weight: bold; color: #F44A40;">5,000
+                            <h3 id="userCount" class="counter"
+                                style="font-size: 2.5rem; font-weight: bold; color: #F44A40;">
+                                {{ $userCount }}
                             </h3>
                             <p>Pengguna Terdaftar</p>
                         </div>
@@ -222,248 +228,247 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- adapt_area_end  -->
+
+    <!-- testmonial_area_start  -->
+    <div class="testmonial_area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="textmonial_active owl-carousel">
+                        <div class="testmonial_wrap">
+                            <div class="single_testmonial d-flex align-items-center">
+                                <div class="test_thumb">
+                                    <img src="user/img/testmonial/1.png" alt="">
+                                </div>
+                                <div class="test_content">
+                                    <h4>Jhon Walker</h4>
+                                    <span>Head of web design</span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exerci.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testmonial_wrap">
+                            <div class="single_testmonial d-flex align-items-center">
+                                <div class="test_thumb">
+                                    <img src="user/img/testmonial/1.png" alt="">
+                                </div>
+                                <div class="test_content">
+                                    <h4>Jhon Walker</h4>
+                                    <span>Head of web design</span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exerci.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="testmonial_wrap">
+                            <div class="single_testmonial d-flex align-items-center">
+                                <div class="test_thumb">
+                                    <img src="user/img/testmonial/1.png" alt="">
+                                </div>
+                                <div class="test_content">
+                                    <h4>Jhon Walker</h4>
+                                    <span>Head of web design</span>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                        tempor
+                                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                                        nostrud exerci.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+    </div>
+    <!-- testmonial_area_end  -->
 
 
-        <!-- adapt_area_end  -->
 
-        <!-- testmonial_area_start  -->
-        <div class="testmonial_area">
+    <div class="contact_anipat anipat_bg_1">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact_text text-center">
+                        <div class="section_title text-center">
+                            <h3>Kenapa Memilih Sarang Walet Kami?</h3>
+                            <p>Kami menawarkan sarang walet berkualitas tinggi, yang dipanen dengan hati-hati untuk
+                                memastikan yang terbaik untuk kesehatan dan kebutuhan kuliner Anda. Tim kami yang
+                                berdedikasi menyediakan layanan dan dukungan yang luar biasa.</p>
+                        </div>
+                        <div class="contact_btn d-flex align-items-center justify-content-center">
+                            <a href="contact.html" class="boxed-btn4">Hubungi Kami</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer_start  -->
+    <footer class="footer">
+        <div class="footer_top">
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="textmonial_active owl-carousel">
-                            <div class="testmonial_wrap">
-                                <div class="single_testmonial d-flex align-items-center">
-                                    <div class="test_thumb">
-                                        <img src="user/img/testmonial/1.png" alt="">
-                                    </div>
-                                    <div class="test_content">
-                                        <h4>Jhon Walker</h4>
-                                        <span>Head of web design</span>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor
-                                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                            nostrud exerci.</p>
-                                    </div>
-                                </div>
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 col-lg-3">
+                        <div class="footer_widget">
+                            <h3 class="footer_title">
+                                Contact Us
+                            </h3>
+                            <ul class="address_line">
+                                <li>+555 0000 565</li>
+                                <li><a href="#">Demomail@gmail.Com</a></li>
+                                <li>700, Green Lane, New York, USA</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-3  col-md-6 col-lg-3">
+                        <div class="footer_widget">
+                            <h3 class="footer_title">
+                                Our Servces
+                            </h3>
+                            <ul class="links">
+                                <li><a href="#">Pet Insurance</a></li>
+                                <li><a href="#">Pet surgeries </a></li>
+                                <li><a href="#">Pet Adoption</a></li>
+                                <li><a href="#">Dog Insurance</a></li>
+                                <li><a href="#">Dog Insurance</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-3  col-md-6 col-lg-3">
+                        <div class="footer_widget">
+                            <h3 class="footer_title">
+                                Quick Link
+                            </h3>
+                            <ul class="links">
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Terms of Service</a></li>
+                                <li><a href="#">Login info</a></li>
+                                <li><a href="#">Knowledge Base</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-lg-3 ">
+                        <div class="footer_widget">
+                            <div class="footer_logo">
+                                <a href="#">
+                                    <img src="user/img/logo.png" alt="">
+                                </a>
                             </div>
-                            <div class="testmonial_wrap">
-                                <div class="single_testmonial d-flex align-items-center">
-                                    <div class="test_thumb">
-                                        <img src="user/img/testmonial/1.png" alt="">
-                                    </div>
-                                    <div class="test_content">
-                                        <h4>Jhon Walker</h4>
-                                        <span>Head of web design</span>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor
-                                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                            nostrud exerci.</p>
-                                    </div>
-                                </div>
+                            <p class="address_text">239 E 5th St, New York
+                                NY 10003, USA
+                            </p>
+                            <div class="socail_links">
+                                <ul>
+                                    <li>
+                                        <a href="#">
+                                            <i class="ti-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="ti-pinterest"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-google-plus"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-linkedin"></i>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="testmonial_wrap">
-                                <div class="single_testmonial d-flex align-items-center">
-                                    <div class="test_thumb">
-                                        <img src="user/img/testmonial/1.png" alt="">
-                                    </div>
-                                    <div class="test_content">
-                                        <h4>Jhon Walker</h4>
-                                        <span>Head of web design</span>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                            tempor
-                                            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                            nostrud exerci.</p>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-        <!-- testmonial_area_end  -->
-
-
-
-        <div class="contact_anipat anipat_bg_1">
+        <div class="copy-right_text">
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="contact_text text-center">
-                            <div class="section_title text-center">
-                                <h3>Kenapa Memilih Sarang Walet Kami?</h3>
-                                <p>Kami menawarkan sarang walet berkualitas tinggi, yang dipanen dengan hati-hati untuk
-                                    memastikan yang terbaik untuk kesehatan dan kebutuhan kuliner Anda. Tim kami yang
-                                    berdedikasi menyediakan layanan dan dukungan yang luar biasa.</p>
-                            </div>
-                            <div class="contact_btn d-flex align-items-center justify-content-center">
-                                <a href="contact.html" class="boxed-btn4">Hubungi Kami</a>
-                            </div>
-                        </div>
+                <div class="bordered_1px"></div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <p class="copy_right text-center">
+                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;
+                            <script>
+                                document.write(new Date().getFullYear());
+                            </script> All rights reserved | This template is made with <i
+                                class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
+                                target="_blank">Colorlib</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </p>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- footer_start  -->
-        <footer class="footer">
-            <div class="footer_top">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6 col-lg-3">
-                            <div class="footer_widget">
-                                <h3 class="footer_title">
-                                    Contact Us
-                                </h3>
-                                <ul class="address_line">
-                                    <li>+555 0000 565</li>
-                                    <li><a href="#">Demomail@gmail.Com</a></li>
-                                    <li>700, Green Lane, New York, USA</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-xl-3  col-md-6 col-lg-3">
-                            <div class="footer_widget">
-                                <h3 class="footer_title">
-                                    Our Servces
-                                </h3>
-                                <ul class="links">
-                                    <li><a href="#">Pet Insurance</a></li>
-                                    <li><a href="#">Pet surgeries </a></li>
-                                    <li><a href="#">Pet Adoption</a></li>
-                                    <li><a href="#">Dog Insurance</a></li>
-                                    <li><a href="#">Dog Insurance</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-xl-3  col-md-6 col-lg-3">
-                            <div class="footer_widget">
-                                <h3 class="footer_title">
-                                    Quick Link
-                                </h3>
-                                <ul class="links">
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Terms of Service</a></li>
-                                    <li><a href="#">Login info</a></li>
-                                    <li><a href="#">Knowledge Base</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6 col-lg-3 ">
-                            <div class="footer_widget">
-                                <div class="footer_logo">
-                                    <a href="#">
-                                        <img src="user/img/logo.png" alt="">
-                                    </a>
-                                </div>
-                                <p class="address_text">239 E 5th St, New York
-                                    NY 10003, USA
-                                </p>
-                                <div class="socail_links">
-                                    <ul>
-                                        <li>
-                                            <a href="#">
-                                                <i class="ti-facebook"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="ti-pinterest"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-google-plus"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-linkedin"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="copy-right_text">
-                <div class="container">
-                    <div class="bordered_1px"></div>
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <p class="copy_right text-center">
-                            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                                Copyright &copy;
-                                <script>
-                                    document.write(new Date().getFullYear());
-                                </script> All rights reserved | This template is made with <i
-                                    class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
-                                    target="_blank">Colorlib</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            </p>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- footer_end  -->
+    </footer>
+    <!-- footer_end  -->
 
 
-        <!-- JS here -->
-        <script src="user/js/vendor/modernizr-3.5.0.min.js"></script>
-        <script src="user/js/vendor/jquery-1.12.4.min.js"></script>
-        <script src="user/js/popper.min.js"></script>
-        <script src="user/js/bootstrap.min.js"></script>
-        <script src="user/js/owl.carousel.min.js"></script>
-        <script src="user/js/isotope.pkgd.min.js"></script>
-        <script src="user/js/ajax-form.js"></script>
-        <script src="user/js/waypoints.min.js"></script>
-        <script src="user/js/jquery.counterup.min.js"></script>
-        <script src="user/js/imagesloaded.pkgd.min.js"></script>
-        <script src="user/js/scrollIt.js"></script>
-        <script src="user/js/jquery.scrollUp.min.js"></script>
-        <script src="user/js/wow.min.js"></script>
-        <script src="user/js/nice-select.min.js"></script>
-        <script src="user/js/jquery.slicknav.min.js"></script>
-        <script src="user/js/jquery.magnific-popup.min.js"></script>
-        <script src="user/js/plugins.js"></script>
-        <script src="user/js/gijgo.min.js"></script>
+    <!-- JS here -->
+    <script src="user/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="user/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="user/js/popper.min.js"></script>
+    <script src="user/js/bootstrap.min.js"></script>
+    <script src="user/js/owl.carousel.min.js"></script>
+    <script src="user/js/isotope.pkgd.min.js"></script>
+    <script src="user/js/ajax-form.js"></script>
+    <script src="user/js/waypoints.min.js"></script>
+    <script src="user/js/jquery.counterup.min.js"></script>
+    <script src="user/js/imagesloaded.pkgd.min.js"></script>
+    <script src="user/js/scrollIt.js"></script>
+    <script src="user/js/jquery.scrollUp.min.js"></script>
+    <script src="user/js/wow.min.js"></script>
+    <script src="user/js/nice-select.min.js"></script>
+    <script src="user/js/jquery.slicknav.min.js"></script>
+    <script src="user/js/jquery.magnific-popup.min.js"></script>
+    <script src="user/js/plugins.js"></script>
+    <script src="user/js/gijgo.min.js"></script>
 
-        <!--contact js-->
-        <script src="user/js/contact.js"></script>
-        <script src="user/js/jquery.ajaxchimp.min.js"></script>
-        <script src="user/js/jquery.form.js"></script>
-        <script src="user/js/jquery.validate.min.js"></script>
-        <script src="user/js/mail-script.js"></script>
+    <!--contact js-->
+    <script src="user/js/contact.js"></script>
+    <script src="user/js/jquery.ajaxchimp.min.js"></script>
+    <script src="user/js/jquery.form.js"></script>
+    <script src="user/js/jquery.validate.min.js"></script>
+    <script src="user/js/mail-script.js"></script>
 
-        <script src="user/js/main.js"></script>
-        <script>
-            $('#datepicker').datepicker({
-                iconsLibrary: 'fontawesome',
-                disableDaysOfWeek: [0, 0],
-                //     icons: {
-                //      rightIcon: '<span class="fa fa-caret-down"></span>'
-                //  }
-            });
-            $('#datepicker2').datepicker({
-                iconsLibrary: 'fontawesome',
-                icons: {
-                    rightIcon: '<span class="fa fa-caret-down"></span>'
-                }
 
-            });
-            var timepicker = $('#timepicker').timepicker({
-                format: 'HH.MM'
-            });
-        </script>
+    <script src="user/js/main.js"></script>
+    <script>
+        $('#datepicker').datepicker({
+            iconsLibrary: 'fontawesome',
+            disableDaysOfWeek: [0, 0],
+            //     icons: {
+            //      rightIcon: '<span class="fa fa-caret-down"></span>'
+            //  }
+        });
+        $('#datepicker2').datepicker({
+            iconsLibrary: 'fontawesome',
+            icons: {
+                rightIcon: '<span class="fa fa-caret-down"></span>'
+            }
+
+        });
+        var timepicker = $('#timepicker').timepicker({
+            format: 'HH.MM'
+        });
+    </script>
 </body>
 
 </html>
