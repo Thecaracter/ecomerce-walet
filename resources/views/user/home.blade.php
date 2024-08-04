@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col-xl-3 col-lg-3">
                             <div class="logo">
-                                <a href="index.html">
+                                <a href="/">
                                     <img src="user/img/logo.png" alt="">
                                 </a>
                             </div>
@@ -46,22 +46,25 @@
                             <div class="main-menu  d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a href="index.html">home</a></li>
-                                        <li><a href="about.html">about</a></li>
-                                        <li><a href="#">blog <i class="ti-angle-down"></i></a>
-                                            <ul class="submenu">
-                                                <li><a href="blog.html">blog</a></li>
-                                                <li><a href="single-blog.html">single-blog</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">pages <i class="ti-angle-down"></i></a>
-                                            <ul class="submenu">
-                                                <li><a href="elements.html">elements</a></li>
-
-                                            </ul>
-                                        </li>
-                                        <li><a href="service.html">services</a></li>
+                                        <li><a href="/">Home</a></li>
+                                        <li><a href="about.html">About</a></li>
+                                        <li><a href="service.html">Product</a></li>
                                         <li><a href="contact.html">Contact</a></li>
+                                        @auth
+                                            <li>{{ Auth::user()->name }}</li>
+                                            <li>
+                                                <a href="{{ route('logout') }}"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                    Logout
+                                                </a>
+                                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                    style="display: none;">
+                                                    @csrf
+                                                </form>
+                                            </li>
+                                        @else
+                                            <li><a href="{{ route('login') }}">Login</a></li>
+                                        @endauth
                                     </ul>
                                 </nav>
                             </div>
