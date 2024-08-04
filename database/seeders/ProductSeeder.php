@@ -17,9 +17,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Product 1',
                 'description' => 'Description for Product 1',
-                'price' => 100.00,
-                'stock' => 10,
+                'price' => 100,
                 'foto' => 'product1.jpeg',
+                'berat' => 250,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -27,9 +27,9 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Product 2',
                 'description' => 'Description for Product 2',
-                'price' => 200.00,
-                'stock' => 20,
+                'price' => 200,
                 'foto' => 'product2.jpg',
+                'berat' => 500,
                 'is_active' => true,
                 'created_at' => now(),
                 'updated_at' => now(),

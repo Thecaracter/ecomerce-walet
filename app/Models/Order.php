@@ -14,6 +14,8 @@ class Order extends Model
         'user_id',
         'total_price',
         'status',
+        'alamat_pengiriman',
+        'pengiriman',
     ];
 
     /**

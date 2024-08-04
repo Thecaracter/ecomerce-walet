@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section with Search Field -->
-    <section class="hero py-5" style="background-color: #ed736d;">
+    <section class="hero py-5" style="background-color: #F44A40;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -33,7 +33,7 @@
                 @foreach ($products as $product)
                     <div class="col-6 col-md-3 mb-4">
                         <div class="card"
-                            style="border: 2px solid #F44A40; border-radius: .25rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);">
+                            style="border: 2px solid #ed736d; border-radius: .25rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);">
                             <!-- Enhanced shadow and border color -->
                             <img src="{{ asset('foto/product/' . $product->foto) }}" class="card-img-top"
                                 alt="{{ $product->name }}" style="object-fit: cover; height: 200px;">
@@ -45,10 +45,14 @@
                                 <p class="card-text" style="font-size: 1rem;">{{ $product->description }}</p>
                                 <p class="card-text" style="font-size: 1rem;"><strong>Price:</strong> <span class="price"
                                         data-price="{{ $product->price }}"></span></p>
-                                </p>
-                                <a href="" class="btn btn-primary mt-auto"
-                                    style="background-color: #F44A40; border-color: #F44A40; margin-top: auto;">Lihat
-                                    Detail</a>
+                                <p class="card-text" style="font-size: 1rem;"><strong>Berat:</strong> {{ $product->berat }}
+                                    gram</p>
+                                <button class="btn btn-primary mt-auto add-to-cart"
+                                    style="background-color: #F44A40; border-color: #F44A40; margin-top: auto;"
+                                    data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                    data-price="{{ $product->price }}" data-foto="{{ $product->foto }}"
+                                    data-berat="{{ $product->berat }}">Masukan
+                                    Keranjang</button>
                             </div>
                         </div>
                     </div>
@@ -70,6 +74,44 @@
             document.querySelectorAll('.price').forEach(element => {
                 const rawPrice = parseFloat(element.getAttribute('data-price'));
                 element.textContent = formatter.format(rawPrice);
+            });
+
+            // Add to cart functionality
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = this.getAttribute('data-price');
+                    const foto = this.getAttribute('data-foto');
+                    const berat = this.getAttribute('data-berat'); // Include berat
+
+                    fetch('{{ route('cart.add') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                id,
+                                name,
+                                price,
+                                foto,
+                                berat // Include berat
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: data.success,
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
             });
         });
     </script>

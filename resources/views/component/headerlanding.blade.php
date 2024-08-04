@@ -19,7 +19,7 @@
                                     <li class="nav-item"><a class="nav-link"
                                             href="{{ route('user.product') }}">Product</a></li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="contact.html">
+                                        <a class="nav-link" href="{{ route('cart.index') }}">
                                             <i class="fas fa-shopping-bag"
                                                 style="font-size: 1.5rem; margin-right: 10px;"></i> Keranjang
                                         </a>

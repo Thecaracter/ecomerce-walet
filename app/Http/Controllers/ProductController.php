@@ -29,7 +29,7 @@ class ProductController extends Controller
                 $q->where('name', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%')
                     ->orWhere('price', 'like', '%' . $search . '%')
-                    ->orWhere('stock', 'like', '%' . $search . '%');
+                    ->orWhere('berat', 'like', '%' . $search . '%');
             });
         }
 
@@ -63,13 +63,13 @@ class ProductController extends Controller
                 'name' => 'required|string|max:255',
                 'description' => 'required|string',
                 'price' => 'required|numeric',
-                'stock' => 'required|integer',
+                'berat' => 'required|integer',
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'is_active' => 'required|boolean',
             ]);
 
             // Prepare data for saving
-            $data = $request->only(['name', 'description', 'price', 'stock', 'is_active']);
+            $data = $request->only(['name', 'description', 'price', 'berat', 'is_active']);
 
             // Handle file upload
             if ($request->hasFile('foto')) {
@@ -124,7 +124,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'stock' => 'required|integer',
+            'berat' => 'required|integer',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'required|boolean',
         ]);
@@ -135,7 +135,7 @@ class ProductController extends Controller
         $product->name = $request->input('name');
         $product->description = $request->input('description');
         $product->price = $request->input('price');
-        $product->stock = $request->input('stock');
+        $product->berat = $request->input('berat');
         $product->is_active = $request->input('is_active');
 
         if ($request->hasFile('foto')) {

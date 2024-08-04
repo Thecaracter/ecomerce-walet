@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users');
             $table->integer('total_price');
             $table->enum('status', ['pembayaran', 'proses', 'pengiriman', 'diterima', 'ditolak']);
+            $table->string('alamat_pengiriman');
+            $table->string('pengiriman');
             $table->timestamps();
         });
     }

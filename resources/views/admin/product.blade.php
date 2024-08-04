@@ -43,7 +43,7 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Price</th>
-                                            <th>Stock</th>
+                                            <th>berat</th>
                                             <th>Foto</th>
                                             <th>Is Active</th>
                                             <th>Actions</th>
@@ -53,7 +53,7 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Price</th>
-                                            <th>Stock</th>
+                                            <th>berat</th>
                                             <th>Foto</th>
                                             <th>Is Active</th>
                                             <th>Actions</th>
@@ -70,7 +70,7 @@
                                                 <tr>
                                                     <td>{{ $product->name }}</td>
                                                     <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                                                    <td>{{ $product->stock }}</td>
+                                                    <td>{{ $product->berat }} gram</td>
                                                     <td>
                                                         <button type="button" class="btn btn-secondary btn-sm"
                                                             data-toggle="modal"
@@ -168,8 +168,8 @@
                             <input type="hidden" id="price" name="price" required>
                         </div>
                         <div class="form-group">
-                            <label for="stock">Stock</label>
-                            <input type="number" class="form-control" id="stock" name="stock" required>
+                            <label for="berat">Berat</label>
+                            <input type="number" class="form-control" id="berat" name="berat" required>
                         </div>
                         <div class="form-group">
                             <label for="foto">Photo</label>
@@ -229,9 +229,9 @@
                                     value="{{ $product->price }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="stock{{ $product->id }}">Stock</label>
-                                <input type="number" class="form-control" id="stock{{ $product->id }}" name="stock"
-                                    value="{{ $product->stock }}" required>
+                                <label for="berat{{ $product->id }}">berat</label>
+                                <input type="number" class="form-control" id="berat{{ $product->id }}" name="berat"
+                                    value="{{ $product->berat }}" required>
                             </div>
                             <div class="form-group">
                                 <label for="foto{{ $product->id }}">Photo</label>

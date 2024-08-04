@@ -18,6 +18,7 @@ class Product extends Model
         'price',
         'stock',
         'foto',
+        'berat',
         'is_active',
     ];
 

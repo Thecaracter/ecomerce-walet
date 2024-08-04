@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\RiwayatController;
-use App\Http\Controllers\user\HomeController;
-use App\Http\Controllers\user\ProductControllerLanding;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\user\HomeController;
+use App\Http\Controllers\user\ProductControllerLanding;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,17 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth-regist
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/user/product', [ProductControllerLanding::class, 'index'])->name('user.product');
 
+// Cart routes
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+//check ongkir
+Route::get('/ongkir', [OngkirController::class, 'index'])->name('ongkir');
+Route::get('/provinces', [OngkirController::class, 'province'])->name('provinces');
+Route::get('/cities', [OngkirController::class, 'city'])->name('cities');
+Route::post('/check-ongkir', [OngkirController::class, 'checkOngkir'])->name('check-ongkir');
 
 
 // Terapkan middleware 'check.is.logged.in' untuk memastikan pengguna terautentikasi
