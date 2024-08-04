@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\user\HomeController;
+use App\Http\Controllers\user\ProductControllerLanding;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
@@ -19,7 +20,7 @@ use App\Http\Controllers\DashboardController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('auth-login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -27,8 +28,16 @@ Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('
 Route::post('/register', [AuthController::class, 'register'])->name('auth-register');
 
 
+
+// landing page
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/user/product', [ProductControllerLanding::class, 'index'])->name('user.product');
+
+
+
+// Terapkan middleware 'check.is.logged.in' untuk memastikan pengguna terautentikasi
 Route::middleware(['check.is.logged.in'])->group(function () {
-    //Dashboard routes
+    // Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/top-selling-products', [DashboardController::class, 'topSellingProducts']);
 
@@ -44,4 +53,5 @@ Route::middleware(['check.is.logged.in'])->group(function () {
 
     // Riwayat routes
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
 });

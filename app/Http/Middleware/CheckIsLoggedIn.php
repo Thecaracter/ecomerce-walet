@@ -17,14 +17,24 @@ class CheckIsLoggedIn
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            // Set a session variable for error message
             $request->session()->flash('alert', [
                 'type' => 'error',
                 'message' => 'You must be logged in to access this page.',
             ]);
 
-            // Redirect to login page
             return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+
+        // Example: Restrict access to admin users only
+        if (!$user->hasRole('admin')) {
+            $request->session()->flash('alert', [
+                'type' => 'error',
+                'message' => 'You do not have permission to access this page.',
+            ]);
+
+            return redirect()->route('home');
         }
 
         return $next($request);
