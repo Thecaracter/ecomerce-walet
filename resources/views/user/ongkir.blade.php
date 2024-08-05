@@ -14,6 +14,73 @@
         .bg-custom {
             background-color: #F44A40;
         }
+
+        .text-custom {
+            color: #F44A40;
+        }
+
+        .card {
+            box-shadow: 0 4px 8px rgba(244, 74, 64, 0.5);
+        }
+
+        .btn-primary {
+            background-color: #F44A40;
+            border-color: #F44A40;
+        }
+
+        .btn-primary:hover {
+            background-color: #e63946;
+            border-color: #e63946;
+        }
+
+        .table-header-custom th {
+            background-color: #F44A40;
+            color: white;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8d7da;
+        }
+
+        .table-bordered td,
+        .table-bordered th {
+            border: 1px solid #F44A40;
+        }
+
+        .card-header-custom {
+            background-color: #F44A40;
+            color: white;
+        }
+
+        .table thead th {
+            font-weight: bold;
+        }
+
+        .table tfoot tr td {
+            font-weight: bold;
+        }
+
+        .form-label {
+            color: #333;
+        }
+
+        .select2-container--default .select2-results__option--highlighted {
+            background-color: #F44A40;
+            color: white;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .table thead th,
+        .table tfoot td {
+            text-align: center;
+        }
+
+        .table tfoot tr td {
+            background-color: #f8d7da;
+        }
     </style>
 </head>
 
