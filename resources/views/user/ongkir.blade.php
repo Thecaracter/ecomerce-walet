@@ -6,21 +6,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>
-        Integrasi RajaOngkir dengan Laravel
-    </title>
+    <title>Walet || Ongkir</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .bg-custom {
+            background-color: #F44A40;
+        }
+    </style>
 </head>
 
 <body>
+    <section class="ongkir py-5">
+        <div class="container">
+            <h2 class="mb-4 text-custom">Detail Ongkir</h2>
+            @if ($cart && count($cart) > 0)
+                <table class="table table-bordered table-striped">
+                    <thead class="table-header-custom">
+                        <tr class="card-header-custom">
+                            <th>Produk</th>
+                            <th>Harga</th>
+                            <th>Berat</th>
+                            <th>Jumlah</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cart as $item)
+                            @php
+                                $itemTotalPrice = $item['price'] * $item['quantity'];
+                                $itemTotalWeight = $item['berat'] * $item['quantity'];
+                            @endphp
+                            <tr>
+                                <td>{{ $item['name'] }}</td>
+                                <td>Rp{{ number_format($item['price'], 0, ',', '.') }}</td>
+                                <td>{{ $item['berat'] }} gram</td>
+                                <td>{{ $item['quantity'] }}</td>
+                                <td>Rp{{ number_format($itemTotalPrice, 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" class="text-end"><strong>Total Berat:</strong></td>
+                            <td colspan="3" class="text-end">{{ number_format($totalWeight, 0, ',', '.') }} gram
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="text-end"><strong>Total Harga:</strong></td>
+                            <td colspan="3" class="text-end">Rp{{ number_format($total, 0, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            @else
+                <p>Keranjang Anda kosong.</p>
+            @endif
+        </div>
+    </section>
+
+    <style>
+        .table-header-custom th {
+            background-color: #F44A40;
+            /* Warna latar belakang header tabel */
+            color: white;
+            /* Warna teks header tabel */
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8d7da;
+            /* Warna latar belakang baris ganjil */
+        }
+
+        .table-bordered td,
+        .table-bordered th {
+            border: 1px solid #F44A40;
+            /* Warna border tabel */
+        }
+    </style>
+
     <main class="py-5">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <h2 class="fs-5 py-4 text-center">
-                        Integrasi RajaOngkir dengan Laravel
+                        Check Ongkir
                     </h2>
                     <div class="card border rounded shadow">
                         <div class="card-body">
@@ -68,16 +138,47 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="weight" class="form-label">Weight (Gram)</label>
-                                        <input type="number" name="weight" id="weight" class="form-control">
+                                        <input type="number" name="weight" id="weight" class="form-control"
+                                            value="{{ $totalWeight }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-primary" id="checkBtn">Check</button>
+                                    <button class="btn btn-primary" id="checkBtn"
+                                        style="background-color: #F44A40; border-color: #F44A40;">Check</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div id="result" class="mt-3 d-none"></div>
+                    <div class="col-12 mt-3">
+                        <div class="card border rounded shadow">
+                            <div class="card-body">
+                                <h4 class="fs-5">Total Biaya</h4>
+                                <table class="table table-bordered" id="totalCostTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>Deskripsi</th>
+                                            <th>Jumlah</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Harga Produk</td>
+                                            <td id="productPrice">Rp0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Harga Ongkir</td>
+                                            <td id="shippingCost">Rp0</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Biaya</strong></td>
+                                            <td id="totalCost"><strong>Rp0</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,9 +210,6 @@
                     },
                     error: function(xhr) {
                         console.error('Error fetching provinces:', xhr.responseText);
-                        alert(
-                            'Terjadi kesalahan saat mengambil provinsi. Periksa konsol untuk informasi lebih lanjut.'
-                        );
                     }
                 }
             });
@@ -142,9 +240,6 @@
                         error: function(xhr) {
                             console.error('Error fetching cities for origin province:', xhr
                                 .responseText);
-                            alert(
-                                'Terjadi kesalahan saat mengambil kota. Periksa konsol untuk informasi lebih lanjut.'
-                            );
                         }
                     }
                 });
@@ -173,9 +268,6 @@
                         error: function(xhr) {
                             console.error('Error fetching cities for destination province:', xhr
                                 .responseText);
-                            alert(
-                                'Terjadi kesalahan saat mengambil kota. Periksa konsol untuk informasi lebih lanjut.'
-                            );
                         }
                     }
                 });
@@ -209,41 +301,58 @@
                         $('#checkBtn').attr('disabled', false);
                         $('#result').empty();
                         $('#result').append(`
-                    <div class="col-12">
-                        <div class="card border rounded shadow">
-                            <div class="card-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Service</th>
-                                            <th>Description</th>
-                                            <th>Cost</th>
-                                            <th>ETD</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="resultBody">
-                                    </tbody>
-                                </table>
+                            <div class="col-12">
+                                <div class="card border rounded shadow">
+                                    <div class="card-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr style="background-color: #F44A40; color: white;">
+                                                    <th>Service</th>
+                                                    <th>Description</th>
+                                                    <th>Cost</th>
+                                                    <th>Hari Pengiriman</th>
+                                                    <th>Select</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="resultBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                `);
+                        `);
                         $.each(response, function(i, val) {
                             $('#resultBody').append(`
-                        <tr>
-                            <td>${val.service}</td>
-                            <td>${val.description}</td>
-                            <td>${val.cost[0].value}</td>
-                            <td>${val.cost[0].etd}</td>
-                        </tr>
-                    `);
+                                <tr>
+                                    <td>${val.service}</td>
+                                    <td>${val.description}</td>
+                                    <td>Rp${val.cost[0].value}</td>
+                                    <td>${val.cost[0].etd}</td>
+                                    <td>
+                                        <button class="btn btn-primary select-service" data-service="${val.service}" data-cost="${val.cost[0].value}" style="background-color: #F44A40; border-color: #F44A40;">Select</button>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                        $('.select-service').on('click', function() {
+                            let selectedService = $(this).data('service');
+                            let selectedCost = $(this).data('cost');
+                            let totalPrice = parseInt(
+                                '{{ $total }}'); // Harga produk
+                            let totalCost = totalPrice + parseInt(selectedCost);
+                            $('#totalCostTable').show();
+                            $('#productPrice').text('Rp' + totalPrice.toLocaleString(
+                                'id-ID'));
+                            $('#shippingCost').text('Rp' + selectedCost.toLocaleString(
+                                'id-ID'));
+                            $('#totalCost').html('<strong>Rp' + totalCost
+                                .toLocaleString('id-ID') + '</strong>');
+                            // alert('Service: ' + selectedService + ', Cost: ' +
+                            //     selectedCost);
                         });
                     },
                     error: function(xhr) {
                         console.error('Error checking ongkir:', xhr.responseText);
-                        alert(
-                            'Terjadi kesalahan saat memeriksa ongkir. Periksa konsol untuk informasi lebih lanjut.'
-                        );
                     }
                 });
             });

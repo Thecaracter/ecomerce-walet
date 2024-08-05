@@ -79,5 +79,13 @@ class CartController extends Controller
             'total_weight' => $totalWeight
         ]);
     }
+    public function checkout()
+    {
+        $cart = session()->get('cart', []);
+        session()->put('checkout_cart', $cart); // Simpan data keranjang ke session
+
+        return redirect()->route('ongkir');
+    }
+
 
 }

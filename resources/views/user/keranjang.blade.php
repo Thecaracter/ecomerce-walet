@@ -3,7 +3,6 @@
 @section('title', 'Keranjang')
 
 @section('content')
-
     <section class="cart py-5">
         <div class="container">
             <div class="row justify-content-center">
@@ -48,7 +47,7 @@
                                             </div>
                                         </td>
                                         <td><span
-                                                class="item-total">Rp{{ number_format($itemTotalPrice, 0, ',', '.') }}</span>
+                                                class="item-total">{{ number_format($itemTotalPrice, 0, ',', '.') }}</span>
                                         </td>
                                         <td>
                                             <button class="btn btn-danger btn-remove" type="button"
@@ -61,9 +60,9 @@
                         <div class="text-right">
                             <h4>Total Berat: <span
                                     id="cart-total-weight">{{ number_format($totalWeight, 0, ',', '.') }}</span> gram</h4>
-                            <h4>Total Harga Barang: <span id="cart-total">Rp{{ number_format($total, 0, ',', '.') }}</span>
-                            </h4>
+                            <h4>Total Harga: <span id="cart-total">{{ number_format($total, 0, ',', '.') }}</span></h4>
                         </div>
+                        <a href="{{ route('checkout') }}" class="genric-btn danger circle">Lanjutkan ke Ongkir</a>
                     @else
                         <p>Keranjang Anda kosong.</p>
                     @endif

@@ -11,8 +11,20 @@ class OngkirController extends Controller
 
     public function index()
     {
-        return view('user.ongkir');
+        $cart = session()->get('checkout_cart', []);
+        session()->forget('checkout_cart'); // Hapus data dari session setelah digunakan
+
+        $total = array_reduce($cart, function ($carry, $item) {
+            return $carry + $item['price'] * $item['quantity'];
+        }, 0);
+
+        $totalWeight = array_reduce($cart, function ($carry, $item) {
+            return $carry + ($item['berat'] ?? 0) * $item['quantity'];
+        }, 0);
+
+        return view('user.ongkir', compact('cart', 'total', 'totalWeight'));
     }
+
     // API key langsung di sini
     private $apiKey = '26d8fdb81bae0322e067102eb56a57e8';
 
