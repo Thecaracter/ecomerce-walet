@@ -106,7 +106,10 @@
                                 $itemTotalWeight = $item['berat'] * $item['quantity'];
                             @endphp
                             <tr>
-                                <td>{{ $item['name'] }}</td>
+                                <td>
+                                    <input type="hidden" name="item_id[]" value="{{ $item['id'] }}">
+                                    {{ $item['name'] }}
+                                </td>
                                 <td>Rp{{ number_format($item['price'], 0, ',', '.') }}</td>
                                 <td>{{ $item['berat'] }} gram</td>
                                 <td>{{ $item['quantity'] }}</td>
@@ -117,8 +120,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="2" class="text-end"><strong>Total Berat:</strong></td>
-                            <td colspan="3" class="text-end">{{ number_format($totalWeight, 0, ',', '.') }} gram
-                            </td>
+                            <td colspan="3" class="text-end">{{ number_format($totalWeight, 0, ',', '.') }} gram</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="text-end"><strong>Total Harga:</strong></td>
@@ -135,20 +137,16 @@
     <style>
         .table-header-custom th {
             background-color: #F44A40;
-            /* Warna latar belakang header tabel */
             color: white;
-            /* Warna teks header tabel */
         }
 
         .table-striped tbody tr:nth-of-type(odd) {
             background-color: #f8d7da;
-            /* Warna latar belakang baris ganjil */
         }
 
         .table-bordered td,
         .table-bordered th {
             border: 1px solid #F44A40;
-            /* Warna border tabel */
         }
     </style>
 
@@ -156,13 +154,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="fs-5 py-4 text-center">
-                        Check Ongkir
-                    </h2>
+                    <h2 class="fs-5 py-4 text-center">Check Ongkir</h2>
                     <div class="card border rounded shadow">
                         <div class="card-body">
                             <form id="form">
-                                <div class="row mb-3">
+                                {{-- <div class="row mb-3">
                                     <strong>Origin</strong>
                                     <div class="col-md-6">
                                         <label for="origin_province" class="form-label">Province</label>
@@ -176,7 +172,7 @@
                                             <option>Choose City</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="row mb-3">
                                     <strong>Destination</strong>
                                     <div class="col-md-6">
@@ -191,6 +187,13 @@
                                         <select name="destination_city" id="destination_city" class="form-select">
                                             <option>Choose City</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <strong>Alamat Lengkap</strong>
+                                    <div class="col-12">
+                                        <label for="address" class="form-label">Alamat Lengkap</label>
+                                        <textarea name="address" id="address" class="form-control" rows="3"></textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -213,6 +216,12 @@
                                     <button class="btn btn-primary" id="checkBtn"
                                         style="background-color: #F44A40; border-color: #F44A40;">Check</button>
                                 </div>
+                                <!-- Hidden Inputs -->
+                                <input type="hidden" id="total_price" name="total_price" value="{{ $total }}">
+                                <input type="hidden" id="total_weight" name="total_weight"
+                                    value="{{ $totalWeight }}">
+                                <input type="hidden" id="alamat_pengiriman" name="alamat_pengiriman">
+                                <input type="hidden" id="pengiriman" name="pengiriman">
                             </form>
                         </div>
                     </div>
@@ -243,6 +252,11 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <button class="btn btn-primary" id="paymentBtn"
+                                    style="background-color: #F44A40; border-color: #F44A40;">Pembayaran</button>
+                                <button class="btn btn-primary" id="back-to-cart"
+                                    style="background-color: #4043f4; border-color: #8240f4;"
+                                    onclick="window.location.href='{{ route('cart.index') }}'">Kembali</button>
                             </div>
                         </div>
                     </div>
@@ -250,6 +264,7 @@
             </div>
         </div>
     </main>
+
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
@@ -268,12 +283,12 @@
                     data: function(params) {
                         return {
                             keyword: params.term
-                        }
+                        };
                     },
                     processResults: function(response) {
                         return {
                             results: response
-                        }
+                        };
                     },
                     error: function(xhr) {
                         console.error('Error fetching provinces:', xhr.responseText);
@@ -297,12 +312,12 @@
                             return {
                                 keyword: params.term,
                                 province_id: $('#origin_province').val()
-                            }
+                            };
                         },
                         processResults: function(response) {
                             return {
                                 results: response
-                            }
+                            };
                         },
                         error: function(xhr) {
                             console.error('Error fetching cities for origin province:', xhr
@@ -325,12 +340,12 @@
                             return {
                                 keyword: params.term,
                                 province_id: $('#destination_province').val()
-                            }
+                            };
                         },
                         processResults: function(response) {
                             return {
                                 results: response
-                            }
+                            };
                         },
                         error: function(xhr) {
                             console.error('Error fetching cities for destination province:', xhr
@@ -343,17 +358,23 @@
             // Event ketika tombol Check diklik
             $('#checkBtn').on('click', function(e) {
                 e.preventDefault();
-                let origin = $('#origin_city').val();
+
+                // let origin = $('#origin_city').val();
                 let destination = $('#destination_city').val();
                 let courier = $('#courier').val();
                 let weight = $('#weight').val();
+
+                // Logging origin dan destination
+                // console.log('Origin:', origin);
+                // console.log('Destination:', destination);
+
                 $.ajax({
                     url: "{{ route('check-ongkir') }}",
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         _token: "{{ csrf_token() }}",
-                        origin: origin,
+                        origin: 133,
                         destination: destination,
                         courier: courier,
                         weight: weight
@@ -414,8 +435,16 @@
                                 'id-ID'));
                             $('#totalCost').html('<strong>Rp' + totalCost
                                 .toLocaleString('id-ID') + '</strong>');
-                            // alert('Service: ' + selectedService + ', Cost: ' +
-                            //     selectedCost);
+
+                            // Set hidden inputs
+                            $('#pengiriman').val(selectedService);
+                            $('#total_shipping_cost').val(
+                                selectedCost); // Simpan biaya ongkir
+                            $('#alamat_pengiriman').val($(
+                                    '#destination_province option:selected')
+                                .text() + ', ' + $(
+                                    '#destination_city option:selected')
+                                .text() + ', ' + $('#address').val());
                         });
                     },
                     error: function(xhr) {
@@ -423,8 +452,65 @@
                     }
                 });
             });
+
+            // Event ketika tombol Pembayaran diklik
+            $('#paymentBtn').on('click', function(e) {
+                e.preventDefault();
+
+                // Mengambil total biaya dari elemen dengan id totalCost
+                let totalCostText = $('#totalCost').text();
+                let totalCostValue = parseInt(totalCostText.replace(/[^\d]/g,
+                    '')); // Menghapus karakter non-digit
+
+                // Menggabungkan alamat pengiriman
+                let destinationProvince = $('#destination_province option:selected').text();
+                let destinationCity = $('#destination_city option:selected').text();
+                let address = $('#address').val();
+                let alamatPengiriman = destinationProvince + ', ' + destinationCity + ', ' + address;
+
+                try {
+                    let totalWeight = $('#total_weight').val();
+                    let pengiriman = $('#pengiriman').val();
+
+                    // Buat data order details dari cart
+                    let orderDetails = [];
+                    @foreach ($cart as $item)
+                        orderDetails.push({
+                            product_id: "{{ $item['id'] }}",
+                            qty: "{{ $item['quantity'] }}",
+                            price: "{{ $item['price'] }}"
+                        });
+                    @endforeach
+
+                    // Kirim permintaan ke server
+                    $.ajax({
+                        url: "{{ route('storeOrder') }}",
+                        type: 'POST',
+                        data: {
+                            total_price: totalCostValue,
+                            total_weight: totalWeight,
+                            alamat_pengiriman: alamatPengiriman,
+                            pengiriman: pengiriman,
+                            order_details: orderDetails,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            alert('Order placed successfully!');
+                            window.location.href = "{{ route('cart.index') }}";
+                        },
+                        error: function(xhr) {
+                            console.error('Error placing order:', xhr.responseText);
+                            alert('Failed to place order!');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error in payment process:', error);
+                    alert('An error occurred during the payment process. Please try again.');
+                }
+            });
         });
     </script>
+
 </body>
 
 </html>

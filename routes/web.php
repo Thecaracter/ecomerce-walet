@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\user\HomeController;
 use App\Http\Controllers\user\ProductControllerLanding;
@@ -48,6 +49,9 @@ Route::get('/ongkir', [OngkirController::class, 'index'])->name('ongkir');
 Route::get('/provinces', [OngkirController::class, 'province'])->name('provinces');
 Route::get('/cities', [OngkirController::class, 'city'])->name('cities');
 Route::post('/check-ongkir', [OngkirController::class, 'checkOngkir'])->name('check-ongkir');
+
+//checkout
+Route::post('/checkout', [CheckoutController::class, 'storeOrder'])->name('storeOrder');
 
 
 // Terapkan middleware 'check.is.logged.in' untuk memastikan pengguna terautentikasi

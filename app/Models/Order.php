@@ -13,6 +13,7 @@ class Order extends Model
         'order_number',
         'user_id',
         'total_price',
+        'total_weight',
         'status',
         'alamat_pengiriman',
         'pengiriman',
