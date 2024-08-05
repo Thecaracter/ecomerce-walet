@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OngkirController;
+use App\Http\Controllers\PaymenController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\CheckoutController;
@@ -53,6 +54,10 @@ Route::post('/check-ongkir', [OngkirController::class, 'checkOngkir'])->name('ch
 //checkout
 Route::post('/checkout', [CheckoutController::class, 'storeOrder'])->name('storeOrder');
 
+//payment
+Route::get('/payment', [PaymenController::class, 'index'])->name('payment.index');
+Route::post('/order/update-status-proses', [PaymenController::class, 'updateStatusToProses'])->name('order.updateStatusProses');
+Route::post('/payment/callback', [PaymenController::class, 'paymentCallback']);
 
 // Terapkan middleware 'check.is.logged.in' untuk memastikan pengguna terautentikasi
 Route::middleware(['check.is.logged.in'])->group(function () {

@@ -495,8 +495,9 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            alert('Order placed successfully!');
-                            window.location.href = "{{ route('cart.index') }}";
+                            window.location.href =
+                                "{{ route('payment.index') }}?order_number=" + response
+                                .order_number;
                         },
                         error: function(xhr) {
                             console.error('Error placing order:', xhr.responseText);

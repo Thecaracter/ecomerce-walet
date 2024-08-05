@@ -18,7 +18,7 @@ class CheckoutController extends Controller
 
         // Generate the order number
         $lastOrder = Order::orderBy('id', 'desc')->first();
-        $orderNumber = 'ORDW-' . ($lastOrder ? $lastOrder->id + 1 : 1);
+        $orderNumber = 'ORDdoasuda-' . ($lastOrder ? $lastOrder->id + 1 : 1);
 
         // Start a transaction
         DB::beginTransaction();
@@ -51,7 +51,7 @@ class CheckoutController extends Controller
             // Clear the cart session
             $request->session()->forget('cart');
 
-            return response()->json(['message' => 'Order placed successfully!'], 201);
+            return response()->json(['success' => 'Order placed successfully!', 'order_number' => $orderNumber]);
         } catch (\Exception $e) {
             // Rollback the transaction on error
             DB::rollBack();
