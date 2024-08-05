@@ -36,6 +36,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth-regist
 // landing page
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/user/product', [ProductControllerLanding::class, 'index'])->name('user.product');
+Route::get('/products/search', [ProductControllerLanding::class, 'search'])->name('products.search');
 
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');

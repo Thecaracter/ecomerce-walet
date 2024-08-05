@@ -13,4 +13,13 @@ class ProductControllerLanding extends Controller
         $products = Product::all();
         return view('user.product', compact('products'));
     }
+    // Di dalam controller Anda
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('name', 'like', "%$query%")->get();
+
+        return response()->json($products);
+    }
+
 }
