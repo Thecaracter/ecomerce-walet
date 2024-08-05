@@ -62,7 +62,14 @@
                                     id="cart-total-weight">{{ number_format($totalWeight, 0, ',', '.') }}</span> gram</h4>
                             <h4>Total Harga: <span id="cart-total">{{ number_format($total, 0, ',', '.') }}</span></h4>
                         </div>
-                        <a href="{{ route('checkout') }}" class="genric-btn danger circle">Lanjutkan ke Ongkir</a>
+                        <!-- Tombol untuk Pengguna Terautentikasi -->
+                        @auth
+                            <a href="{{ route('checkout') }}" class="genric-btn danger circle" id="checkout-button">Lanjutkan
+                                ke Ongkir</a>
+                        @else
+                            <!-- Tombol Non-Aktif untuk Pengguna Belum Login -->
+                            <a href="#" class="genric-btn danger circle" id="checkout-button">Lanjutkan ke Ongkir</a>
+                        @endauth
                     @else
                         <p>Keranjang Anda kosong.</p>
                     @endif
@@ -169,6 +176,37 @@
                         }
                     });
             }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkoutButton = document.getElementById('checkout-button');
+
+            if (checkoutButton) {
+                checkoutButton.addEventListener('click', function(event) {
+                        @auth
+                        // Jika sudah login, tidak perlu melakukan apa-apa
+                        return;
+                    @else
+                        // Jika belum login, tampilkan SweetAlert
+                        event.preventDefault(); // Mencegah navigasi default
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Perhatian',
+                            text: 'Anda harus login terlebih dahulu untuk melanjutkan.',
+                            confirmButtonText: 'Login',
+                            showCancelButton: true,
+                            cancelButtonText: 'Batal',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href =
+                                    '{{ route('login') }}'; // Arahkan ke halaman login
+                            }
+                        });
+                    @endauth
+                });
+        }
         });
     </script>
 @endsection
