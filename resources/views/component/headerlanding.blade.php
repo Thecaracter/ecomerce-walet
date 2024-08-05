@@ -15,7 +15,7 @@
                             <nav>
                                 <ul id="navigation" class="nav d-flex align-items-center justify-content-end">
                                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About</a></li>
                                     <li class="nav-item"><a class="nav-link"
                                             href="{{ route('user.product') }}">Product</a></li>
                                     <li class="nav-item">

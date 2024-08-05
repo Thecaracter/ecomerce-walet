@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -35,8 +36,13 @@ Route::post('/register', [AuthController::class, 'register'])->name('auth-regist
 
 // landing page
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Product routes
 Route::get('/user/product', [ProductControllerLanding::class, 'index'])->name('user.product');
 Route::get('/products/search', [ProductControllerLanding::class, 'search'])->name('products.search');
+
+// About routes
+Route::get('/about', [AboutController::class, 'index'])->name('about');
 
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
