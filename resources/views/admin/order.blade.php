@@ -193,6 +193,16 @@
                                 <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                             </tr>
                             <tr>
+                                <th>Alamat Pengiriman</th>
+                                <td>
+                                    {{ $order->alamat_pengiriman }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Pengriman</th>
+                                <td>{{ $order->pengiriman }}</td>
+                            </tr>
+                            <tr>
                                 <th>Status</th>
                                 <td>{{ ucfirst($order->status) }}</td>
                             </tr>

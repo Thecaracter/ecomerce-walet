@@ -221,7 +221,7 @@
                         data: @json(array_values($orderSuccessStatistics)),
                         borderColor: 'rgba(54, 162, 235, 1)',
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        fill: false
+                        fill: true
                     }]
                 },
                 options: {
