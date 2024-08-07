@@ -21,7 +21,7 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('cart.index') }}">
                                             <i class="fas fa-shopping-bag"
-                                                style="font-size: 1.5rem; margin-right: 10px;"></i> Keranjangs
+                                                style="font-size: 1.5rem; margin-right: 10px;"></i> Keranjang
                                         </a>
                                     </li>
                                     @auth
