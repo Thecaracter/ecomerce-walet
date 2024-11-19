@@ -11,54 +11,57 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
-        // Capture search term and active status from query string
-        $search = $request->input('search');
-        $isActive = $request->input('is_active');
+        try {
+            Log::info('Product index accessed', [
+                'search' => $request->input('search'),
+                'is_active' => $request->input('is_active')
+            ]);
 
-        // Build query with Query Builder
-        $query = DB::table('product');
+            $search = $request->input('search');
+            $isActive = $request->input('is_active');
+            $query = DB::table('product');
 
-        // Add search condition if exists
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%')
-                    ->orWhere('price', 'like', '%' . $search . '%')
-                    ->orWhere('berat', 'like', '%' . $search . '%');
-            });
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('description', 'like', '%' . $search . '%')
+                        ->orWhere('price', 'like', '%' . $search . '%')
+                        ->orWhere('berat', 'like', '%' . $search . '%');
+                });
+            }
+
+            if ($isActive !== null) {
+                $query->where('is_active', $isActive);
+            }
+
+            $products = $query->paginate(10)->appends(['search' => $search, 'is_active' => $isActive]);
+
+            return view('admin.product', compact('products', 'search', 'isActive'));
+        } catch (\Exception $e) {
+            Log::error('Error in product index', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat data produk.');
         }
-
-        // Add active status condition if exists
-        if ($isActive !== null) {
-            $query->where('is_active', $isActive);
-        }
-
-        // Get paginated results
-        $products = $query->paginate(10)->appends(['search' => $search, 'is_active' => $isActive]);
-
-        return view('admin.product', compact('products', 'search', 'isActive'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.product.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        Log::info('Attempting to create new product', [
+            'request_data' => $request->except(['foto']),
+            'has_photo' => $request->hasFile('foto')
+        ]);
+
         try {
-            // Validate the incoming request
             $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'required|string',
@@ -68,124 +71,124 @@ class ProductController extends Controller
                 'is_active' => 'required|boolean',
             ]);
 
-            // Prepare data for saving
             $data = $request->only(['name', 'description', 'price', 'berat', 'is_active']);
 
-            // Handle file upload
             if ($request->hasFile('foto')) {
                 $file = $request->file('foto');
-                // Generate a unique file name with date and time
                 $timestamp = Carbon::now()->format('Ymd_His');
                 $fileName = $timestamp . '_' . Str::random(10) . '.' . $file->extension();
-                $file->move(public_path('foto/product'), $fileName); // Save file to 'public/foto/product'
-                $data['foto'] = $fileName; // Store the file name in the database
+                $file->move(public_path('foto/product'), $fileName);
+                $data['foto'] = $fileName;
             }
 
-            // Create a new product
             Product::create($data);
 
-            // Redirect with success message
             return redirect()->route('product.index')->with('success', 'Product created successfully.');
-
         } catch (\Exception $e) {
-
-            dd($e->getMessage());
-            dd($request->all());
-            // Log the exception message
-            Log::error('Error creating product: ' . $e->getMessage());
-
-            // Redirect with error message
-            return redirect()->route('product.index')->with('error', 'Failed to create product. Please try again.');
+            Log::error('Error creating product', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            return redirect()->route('product.index')->with('error', 'Failed to create product. ' . $e->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'berat' => 'required|integer',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_active' => 'required|boolean',
+        Log::info('Starting product update process', [
+            'product_id' => $id,
+            'request_data' => $request->all()
         ]);
 
-        $product = Product::findOrFail($id);
+        try {
+            // Validate request
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price_display' => 'required|string',
+                'berat' => 'required|integer',
+                'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'is_active' => 'required|boolean',
+            ]);
 
-        // Update other fields
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->price = $request->input('price');
-        $product->berat = $request->input('berat');
-        $product->is_active = $request->input('is_active');
+            // Format price - remove 'Rp ' and '.' then convert to integer
+            $price = (int) str_replace(['Rp ', '.'], '', $request->input('price_display'));
 
-        if ($request->hasFile('foto')) {
-            // Delete the old file if it exists
-            if ($product->foto) {
-                $oldFilePath = public_path('foto/product/' . $product->foto);
-                if (file_exists($oldFilePath)) {
-                    unlink($oldFilePath);
+            Log::info('Price formatting', [
+                'original_price' => $request->input('price_display'),
+                'formatted_price' => $price
+            ]);
+
+            // Find product
+            $product = Product::findOrFail($id);
+
+            // Handle file upload if new photo is provided
+            if ($request->hasFile('foto')) {
+                Log::info('Processing new photo upload');
+
+                // Delete old photo if exists
+                if ($product->foto) {
+                    $oldFilePath = public_path('foto/product/' . $product->foto);
+                    if (file_exists($oldFilePath)) {
+                        unlink($oldFilePath);
+                        Log::info('Old photo deleted');
+                    }
                 }
+
+                // Upload new photo
+                $file = $request->file('foto');
+                $timestamp = now()->format('YmdHis');
+                $filename = $timestamp . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('foto/product'), $filename);
+                $product->foto = $filename;
             }
 
-            // Handle file upload
-            $file = $request->file('foto');
-            $timestamp = now()->format('YmdHis'); // Current date and time for unique filename
-            $filename = $timestamp . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('foto/product'), $filename);
-            $product->foto = $filename; // Store only the filename
+            // Update fields
+            $product->name = $request->input('name');
+            $product->description = $request->input('description');
+            $product->price = $price;
+            $product->berat = $request->input('berat');
+            $product->is_active = $request->input('is_active');
+
+            Log::info('Saving product updates', [
+                'changes' => $product->getDirty()
+            ]);
+
+            $product->save();
+
+            return redirect()
+                ->route('product.index')
+                ->with('success', 'Product updated successfully.');
+
+        } catch (\Exception $e) {
+            Log::error('Error updating product', [
+                'product_id' => $id,
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+
+            return redirect()
+                ->route('product.index')
+                ->with('error', 'Failed to update product. ' . $e->getMessage());
         }
-
-        $product->save();
-
-        return redirect()->route('product.index')->with('success', 'Product updated successfully.');
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         try {
-            // Find the product by ID
             $product = Product::findOrFail($id);
 
-            // Check if the product has a photo and delete it from the server
             if ($product->foto && file_exists(public_path('foto/product/' . $product->foto))) {
                 unlink(public_path('foto/product/' . $product->foto));
             }
 
-            // Delete the product record from the database
             $product->delete();
 
-            // Redirect with success message
             return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
-
         } catch (\Exception $e) {
-            // Log the exception message
             Log::error('Error deleting product: ' . $e->getMessage());
-
-            // Redirect with error message
             return redirect()->route('product.index')->with('error', 'Failed to delete product. Please try again.');
         }
     }

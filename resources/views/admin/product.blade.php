@@ -139,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Modal Structure -->
+    <!-- Modal Create -->
     <div class="modal fade" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -165,22 +165,22 @@
                             <label for="price">Price</label>
                             <input type="text" class="form-control" id="price_display" required
                                 oninput="formatRupiah(this)">
-                            <input type="hidden" id="price" name="price" required>
+                            <input type="hidden" id="price" name="price">
                         </div>
                         <div class="form-group">
-                            <label for="berat">Berat</label>
+                            <label for="berat">Berat (gram)</label>
                             <input type="number" class="form-control" id="berat" name="berat" required>
                         </div>
                         <div class="form-group">
                             <label for="foto">Photo</label>
-                            <input type="file" class="form-control" id="foto" name="foto"
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*"
                                 onchange="previewImage(event)">
                             <img id="photoPreview" src="" alt="Image Preview"
                                 style="display: none; margin-top: 10px; max-width: 100%;" />
                         </div>
                         <div class="form-group">
-                            <label for="is_active">Active</label>
-                            <select class="form-control" id="is_active" name="is_active">
+                            <label for="is_active">Status</label>
+                            <select class="form-control" id="is_active" name="is_active" required>
                                 <option value="1">Active</option>
                                 <option value="0">Inactive</option>
                             </select>
@@ -194,8 +194,9 @@
             </div>
         </div>
     </div>
+
     @foreach ($products as $product)
-        <!-- Modals Edit -->
+        <!-- Modal Edit -->
         <div class="modal fade" id="editProductModal{{ $product->id }}" tabindex="-1" role="dialog"
             aria-labelledby="editProductModalLabel{{ $product->id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -223,13 +224,11 @@
                             <div class="form-group">
                                 <label for="price_display{{ $product->id }}">Price</label>
                                 <input type="text" class="form-control" id="price_display{{ $product->id }}"
-                                    name="price_display" value="{{ number_format($product->price, 0, ',', '.') }}"
+                                    name="price_display" value="Rp {{ number_format($product->price, 0, ',', '.') }}"
                                     required oninput="formatRupiah(this)">
-                                <input type="hidden" id="price{{ $product->id }}" name="price"
-                                    value="{{ $product->price }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="berat{{ $product->id }}">berat</label>
+                                <label for="berat{{ $product->id }}">Berat (gram)</label>
                                 <input type="number" class="form-control" id="berat{{ $product->id }}" name="berat"
                                     value="{{ $product->berat }}" required>
                             </div>
@@ -237,17 +236,20 @@
                                 <label for="foto{{ $product->id }}">Photo</label>
                                 <input type="file" class="form-control" id="foto{{ $product->id }}" name="foto"
                                     accept="image/*" onchange="previewImage(event, '{{ $product->id }}')">
-                                <small class="form-text text-muted">
-                                    Current File: {{ basename($product->foto) }}
-                                </small>
+                                @if ($product->foto)
+                                    <small class="form-text text-muted">
+                                        Current File: {{ basename($product->foto) }}
+                                    </small>
+                                @endif
                                 <img id="photoPreview{{ $product->id }}"
                                     src="{{ $product->foto ? asset('foto/product/' . $product->foto) : '' }}"
                                     alt="Image Preview"
                                     style="display: {{ $product->foto ? 'block' : 'none' }}; margin-top: 10px; max-width: 100%;" />
                             </div>
                             <div class="form-group">
-                                <label for="is_active{{ $product->id }}">Active</label>
-                                <select class="form-control" id="is_active{{ $product->id }}" name="is_active">
+                                <label for="is_active{{ $product->id }}">Status</label>
+                                <select class="form-control" id="is_active{{ $product->id }}" name="is_active"
+                                    required>
                                     <option value="1" {{ $product->is_active ? 'selected' : '' }}>Active</option>
                                     <option value="0" {{ !$product->is_active ? 'selected' : '' }}>Inactive</option>
                                 </select>
@@ -255,13 +257,14 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <!-- Modals Image -->
+
+        <!-- Modal Image -->
         <div class="modal fade" id="imageModal-{{ $product->id }}" tabindex="-1" role="dialog"
             aria-labelledby="imageModalLabel-{{ $product->id }}" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -273,11 +276,16 @@
                         </button>
                     </div>
                     <div class="modal-body text-center">
-                        <!-- Display image with adjusted size -->
-                        <img src="{{ asset('foto/product/' . $product->foto) }}" alt="{{ $product->name }}"
-                            class="img-fluid mb-3" style="max-width: 100%; height: auto; max-height: 300px;">
-                        <!-- Display product description -->
-                        <p>{{ $product->description }}</p>
+                        @if ($product->foto)
+                            <img src="{{ asset('foto/product/' . $product->foto) }}" alt="{{ $product->name }}"
+                                class="img-fluid mb-3" style="max-width: 100%; height: auto; max-height: 300px;">
+                        @else
+                            <p class="text-muted">No image available</p>
+                        @endif
+                        <div class="mt-3">
+                            <h6>Description:</h6>
+                            <p>{{ $product->description }}</p>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -286,10 +294,39 @@
             </div>
         </div>
     @endforeach
+
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: "{{ session('success') }}",
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: "{{ session('error') }}",
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            });
+        </script>
+    @endif
+
     <script>
         function formatRupiah(element) {
+            // Remove non-digit characters except comma
             let value = element.value.replace(/[^,\d]/g, '').toString();
-            let rawValue = value.replace(/[^,\d]/g, '');
             let split = value.split(',');
             let sisa = split[0].length % 3;
             let rupiah = split[0].substr(0, sisa);
@@ -302,7 +339,14 @@
 
             rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
             element.value = 'Rp ' + rupiah;
-            document.getElementById('price').value = rawValue;
+
+            // Get the ID from the element for edit form
+            let id = element.id.replace('price_display', '');
+
+            // If this is the create form (no ID)
+            if (id === '') {
+                document.getElementById('price').value = value.replace(/[^,\d]/g, '');
+            }
         }
 
         function previewImage(event, id = '') {
@@ -321,8 +365,6 @@
                     photoPreview.src = '';
                     photoPreview.style.display = 'none';
                 }
-            } else {
-                console.error('Photo preview element not found with ID: photoPreview' + id);
             }
         }
 
@@ -341,5 +383,78 @@
                 }
             });
         }
+
+        // Optional: Initialize DataTable if you're using it
+        $(document).ready(function() {
+            $('.table').DataTable({
+                "pageLength": 10,
+                "ordering": true,
+                "info": true,
+                "responsive": true,
+                "dom": '<"top"f>rt<"bottom"lip><"clear">',
+                "language": {
+                    "search": "",
+                    "searchPlaceholder": "Search..."
+                }
+            });
+        });
+
+        // Handle file input change
+        document.querySelectorAll('input[type="file"]').forEach(function(input) {
+            input.addEventListener('change', function() {
+                const fileName = this.files[0]?.name;
+                const fileSize = this.files[0]?.size;
+                const maxSize = 2 * 1024 * 1024; // 2MB
+
+                if (fileSize > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'File too large',
+                        text: 'Please select a file smaller than 2MB'
+                    });
+                    this.value = '';
+                    return false;
+                }
+
+                const fileExtension = fileName?.split('.').pop().toLowerCase();
+                const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+                if (!allowedExtensions.includes(fileExtension)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid file type',
+                        text: 'Please select a valid image file (JPG, JPEG, PNG, GIF)'
+                    });
+                    this.value = '';
+                    return false;
+                }
+            });
+        });
+
+        // Optional: Add form validation
+        document.querySelectorAll('form').forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+
+                requiredFields.forEach(function(field) {
+                    if (!field.value) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    event.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please fill in all required fields'
+                    });
+                }
+            });
+        });
     </script>
 @endsection
