@@ -7,6 +7,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">
+                    <a>Riwayat Pesanan Anda</a>
                     <h2 class="mb-4">Keranjang Belanja</h2>
                     @if (session('cart') && count(session('cart')) > 0)
                         <table class="table table-bordered">

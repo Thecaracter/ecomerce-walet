@@ -9,7 +9,7 @@
                         <div class="slider_text">
                             <h3>Kami Menjual <br> <span>Sarang Walet</span></h3>
                             <p class="animated-bg text-white p-2 rounded-4">Kualitas Terjamin, Harga Kompetitif</p>
-                            <a href="contact.html" class="boxed-btn4">Hubungi Kami</a>
+                            <a href="https://wa.me/628883662780" class="boxed-btn4">Hubungi Kami</a>
                         </div>
                     </div>
                 </div>

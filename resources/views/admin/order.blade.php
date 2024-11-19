@@ -28,17 +28,16 @@
                                 </form>
                                 <div class="btn-group" role="group" aria-label="Order Status">
                                     <a href="{{ route('order.index', ['status' => 'pembayaran', 'search' => $search]) }}"
-                                        class="btn btn-outline-primary {{ $currentStatus == 'pembayaran' ? 'active' : '' }}">Pembayaran</a>
+                                        class="btn btn-outline-primary {{ in_array('pembayaran', (array) $currentStatus) ? 'active' : '' }}">Pembayaran</a>
                                     <a href="{{ route('order.index', ['status' => 'proses', 'search' => $search]) }}"
-                                        class="btn btn-outline-primary {{ $currentStatus == 'proses' ? 'active' : '' }}">Proses</a>
+                                        class="btn btn-outline-primary {{ in_array('proses', (array) $currentStatus) ? 'active' : '' }}">Proses</a>
                                     <a href="{{ route('order.index', ['status' => 'pengiriman', 'search' => $search]) }}"
-                                        class="btn btn-outline-primary {{ $currentStatus == 'pengiriman' ? 'active' : '' }}">Pengiriman</a>
+                                        class="btn btn-outline-primary {{ in_array('pengiriman', (array) $currentStatus) ? 'active' : '' }}">Pengiriman</a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-body mb-3">
-                            <h5>{{ ucfirst($currentStatus) }} Orders</h5>
                             <div class="table-responsive">
                                 <table class="display table table-striped table-hover">
                                     <thead>
@@ -52,75 +51,83 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Order Number</th>
-                                            <th>User</th>
-                                            <th>Total Price</th>
-                                            <th>Status</th>
-                                            <th>Detail</th>
-                                            <th>Update At</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
                                         @forelse ($orders as $order)
                                             <tr>
                                                 <td>{{ $order->order_number }}</td>
                                                 <td>{{ $order->user->name }}</td>
                                                 <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-                                                <td>{{ ucfirst($order->status) }}</td>
-                                                <td>
-                                                    <button class="btn btn-info" data-toggle="modal"
-                                                        data-target="#orderDetailModal{{ $order->id }}">
-                                                        <span class="btn-label">
-                                                            <i class="fa fa-info"></i>
-                                                        </span>
-                                                        Detail
-                                                    </button>
-                                                </td>
-                                                <td>{{ $order->updated_at->format('d M Y') }}</td>
                                                 <td>
                                                     @if ($order->status == 'pembayaran')
+                                                        <span class="badge bg-warning">Pembayaran</span>
+                                                    @elseif($order->status == 'proses')
+                                                        <span class="badge bg-info">Proses</span>
+                                                    @elseif($order->status == 'pengiriman')
+                                                        <span class="badge bg-primary">Pengiriman</span>
+                                                    @elseif($order->status == 'diterima')
+                                                        <span class="badge bg-success">Diterima</span>
+                                                    @elseif($order->status == 'ditolak')
+                                                        <span class="badge bg-danger">Ditolak</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#orderDetailModal{{ $order->id }}">
+                                                        <i class="fa fa-info-circle"></i> Detail
+                                                    </button>
+                                                </td>
+                                                <td>{{ $order->updated_at->format('d M Y H:i') }}</td>
+                                                <td>
+                                                    @if ($order->status == 'pembayaran')
+                                                        <form action="{{ route('order.updateStatus', $order->id) }}"
+                                                            method="POST" class="d-inline">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="proses">
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                <i class="fa fa-check"></i> Terima
+                                                            </button>
+                                                        </form>
                                                         <form id="rejectPaymentForm{{ $order->id }}"
                                                             action="{{ route('order.updateStatus', $order->id) }}"
-                                                            method="POST" style="display:inline;">
+                                                            method="POST" class="d-inline">
                                                             @csrf
                                                             <input type="hidden" name="status" value="ditolak">
-                                                            <button type="button" class="btn btn-danger"
-                                                                onclick="confirmRejectPayment({{ $order->id }})">Tolak
-                                                                Pembayaran</button>
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                onclick="confirmRejectPayment({{ $order->id }})">
+                                                                <i class="fa fa-times"></i> Tolak
+                                                            </button>
                                                         </form>
                                                     @elseif ($order->status == 'proses')
-                                                        <form id="sendOrderForm{{ $order->id }}"
-                                                            action="{{ route('order.updateStatus', $order->id) }}"
-                                                            method="POST" style="display:inline;">
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="pengiriman">
-                                                            <button type="submit" class="btn btn-success">Kirim</button>
-                                                        </form>
+                                                        <button type="button" class="btn btn-primary btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#resiInputModal{{ $order->id }}">
+                                                            <i class="fa fa-shipping-fast"></i> Kirim
+                                                        </button>
                                                         <form id="cancelOrderForm{{ $order->id }}"
                                                             action="{{ route('order.updateStatus', $order->id) }}"
-                                                            method="POST" style="display:inline;">
+                                                            method="POST" class="d-inline">
                                                             @csrf
                                                             <input type="hidden" name="status" value="ditolak">
-                                                            <button type="button" class="btn btn-danger"
-                                                                onclick="confirmCancelOrder({{ $order->id }})">Batalkan</button>
+                                                            <button type="button" class="btn btn-danger btn-sm"
+                                                                onclick="confirmCancelOrder({{ $order->id }})">
+                                                                <i class="fa fa-ban"></i> Batal
+                                                            </button>
                                                         </form>
                                                     @elseif ($order->status == 'pengiriman')
-                                                        <form id="completeOrderForm{{ $order->id }}"
-                                                            action="{{ route('order.updateStatus', $order->id) }}"
-                                                            method="POST" style="display:inline;">
+                                                        <form action="{{ route('order.updateStatus', $order->id) }}"
+                                                            method="POST" class="d-inline">
                                                             @csrf
                                                             <input type="hidden" name="status" value="diterima">
-                                                            <button type="submit" class="btn btn-success">Selesai</button>
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                <i class="fa fa-check-circle"></i> Selesai
+                                                            </button>
                                                         </form>
                                                     @endif
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">No Orders to Display</td>
+                                                <td colspan="7" class="text-center">Tidak ada data order</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -128,184 +135,354 @@
                             </div>
                         </div>
 
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center mt-3">
-                                @if ($orders->onFirstPage())
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Previous</span>
-                                    </li>
-                                @else
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                            href="{{ $orders->previousPageUrl() }}&search={{ $search }}&status={{ $currentStatus }}">Previous</a>
-                                    </li>
-                                @endif
-
-                                @for ($i = 1; $i <= $orders->lastPage(); $i++)
-                                    <li class="page-item {{ $i == $orders->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link"
-                                            href="{{ $orders->url($i) }}&search={{ $search }}&status={{ $currentStatus }}">{{ $i }}</a>
-                                    </li>
-                                @endfor
-
-                                @if ($orders->hasMorePages())
-                                    <li class="page-item">
-                                        <a class="page-link"
-                                            href="{{ $orders->nextPageUrl() }}&search={{ $search }}&status={{ $currentStatus }}">Next</a>
-                                    </li>
-                                @else
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Next</span>
-                                    </li>
-                                @endif
-                            </ul>
-                        </nav>
+                        <!-- Pagination -->
+                        {{ $orders->links() }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal Order Detail -->
     @foreach ($orders as $order)
-        <!-- Modal -->
-        <div class="modal fade" id="orderDetailModal{{ $order->id }}" tabindex="-1" role="dialog"
+        <div class="modal fade" id="orderDetailModal{{ $order->id }}" tabindex="-1"
             aria-labelledby="orderDetailModalLabel{{ $order->id }}" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document"> <!-- Added modal-lg class -->
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="orderDetailModalLabel{{ $order->id }}">Order Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title">Detail Order #{{ $order->order_number }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Order Number</th>
-                                <td>{{ $order->order_number }}</td>
-                            </tr>
-                            <tr>
-                                <th>User Name</th>
-                                <td>{{ $order->user->name }}</td>
-                            </tr>
-                            <tr>
-                                <th>Total Price</th>
-                                <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-                            </tr>
-                            <tr>
-                                <th>Alamat Pengiriman</th>
-                                <td>
-                                    {{ $order->alamat_pengiriman }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Pengriman</th>
-                                <td>{{ $order->pengiriman }}</td>
-                            </tr>
-                            <tr>
-                                <th>Status</th>
-                                <td>{{ ucfirst($order->status) }}</td>
-                            </tr>
-                            <tr>
-                                <th>Updated At</th>
-                                <td>{{ $order->updated_at->format('d M Y') }}</td>
-                            </tr>
-                        </table>
-                        <h5>Order Details</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Product Photo</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $orderTotal = 0; // Initialize total price variable
-                                @endphp
-                                @foreach ($order->orderDetails as $detail)
-                                    @php
-                                        $total = $detail->qty * $detail->price;
-                                        $orderTotal += $total; // Accumulate order total
-                                    @endphp
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Informasi Order</h6>
+                                <table class="table table-sm">
                                     <tr>
-                                        <td><img src="{{ asset('foto/product/' . $detail->product->foto) }}"
-                                                alt="{{ $detail->product->name }}" width="50" height="50"></td>
-                                        <td>{{ $detail->product->name }}</td>
-                                        <td>{{ $detail->qty }}</td>
-                                        <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
-                                        <td>Rp {{ number_format($total, 0, ',', '.') }}</td>
+                                        <td>Status</td>
+                                        <td>: {{ ucfirst($order->status) }}</td>
                                     </tr>
-                                @endforeach
-                                <!-- Total Price Row -->
-                                <tr>
-                                    <th colspan="4" class="text-right">Total Price</th>
-                                    <td>Rp {{ number_format($orderTotal, 0, ',', '.') }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    <tr>
+                                        <td>Tanggal Order</td>
+                                        <td>: {{ $order->created_at->format('d M Y H:i') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Update Terakhir</td>
+                                        <td>: {{ $order->updated_at->format('d M Y H:i') }}</td>
+                                    </tr>
+                                    @if ($order->resi_code)
+                                        <tr>
+                                            <td>Nomor Resi</td>
+                                            <td>: {{ $order->resi_code }}</td>
+                                        </tr>
+                                    @endif
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Informasi Pembeli</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Nama</td>
+                                        <td>: {{ $order->user->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alamat</td>
+                                        <td>: {{ $order->alamat_pengiriman }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pengiriman</td>
+                                        <td>: {{ $order->pengiriman }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <h6 class="text-muted">Detail Produk</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Produk</th>
+                                        <th>Harga</th>
+                                        <th>Qty</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $subtotal = 0; @endphp
+                                    @foreach ($order->orderDetails as $detail)
+                                        @php
+                                            $total = $detail->price * $detail->qty;
+                                            $subtotal += $total;
+                                        @endphp
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="{{ asset('foto/product/' . $detail->product->foto) }}"
+                                                        alt="{{ $detail->product->name }}" class="img-thumbnail me-2"
+                                                        style="width: 50px; height: 50px;">
+                                                    {{ $detail->product->name }}
+                                                </div>
+                                            </td>
+                                            <td>Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
+                                            <td>{{ $detail->qty }}</td>
+                                            <td>Rp {{ number_format($total, 0, ',', '.') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="text-end">Total Belanja</th>
+                                        <th>Rp {{ number_format($subtotal, 0, ',', '.') }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     </div>
                 </div>
             </div>
         </div>
-    @endforeach
-    <script>
-        function formatRupiah(element) {
-            let value = element.value.replace(/[^,\d]/g, '').toString();
-            let rawValue = value.replace(/[^,\d]/g, '');
-            let split = value.split(',');
-            let sisa = split[0].length % 3;
-            let rupiah = split[0].substr(0, sisa);
-            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-            if (ribuan) {
-                let separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
+        <!-- Modal Input Resi -->
+        <div class="modal fade" id="resiInputModal{{ $order->id }}" tabindex="-1"
+            aria-labelledby="resiInputModalLabel{{ $order->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Input Nomor Resi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form id="sendOrderForm{{ $order->id }}" action="{{ route('order.updateStatus', $order->id) }}"
+                        method="POST">
+                        @csrf
+                        <div class="modal-body">
+                            <input type="hidden" name="status" value="pengiriman">
+                            <div class="mb-3">
+                                <label for="resi_code" class="form-label">Nomor Resi <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="resi_code" name="resi_code" required
+                                    minlength="5" placeholder="Masukkan nomor resi">
+                                <div class="form-text text-muted">
+                                    Minimal 5 karakter
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                // Initialize DataTable
+                $('.display').DataTable({
+                    "pageLength": 10,
+                    "order": [
+                        [5, "desc"]
+                    ], // Sort by Update At column
+                    "responsive": true,
+                    "language": {
+                        "search": "Cari:",
+                        "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                        "zeroRecords": "Data tidak ditemukan",
+                        "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                        "infoEmpty": "Tidak ada data yang tersedia",
+                        "infoFiltered": "(difilter dari _MAX_ total data)",
+                        "paginate": {
+                            "first": "Pertama",
+                            "last": "Terakhir",
+                            "next": "Selanjutnya",
+                            "previous": "Sebelumnya"
+                        }
+                    }
+                });
+
+                // Form validation for resi input
+                $('form[id^="sendOrderForm"]').on('submit', function(e) {
+                    const resiCode = $(this).find('input[name="resi_code"]').val();
+                    if (!resiCode || resiCode.length < 5) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Nomor resi harus diisi minimal 5 karakter!',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
+                });
+
+                // Reset modal form when closed
+                $('.modal').on('hidden.bs.modal', function() {
+                    $(this).find('form')[0].reset();
+                    $(this).find('.is-invalid').removeClass('is-invalid');
+                    $(this).find('.error-message').text('');
+                });
+
+                // Handle flash messages
+                @if (session('success'))
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        icon: 'success',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                @endif
+
+                @if (session('error'))
+                    Swal.fire({
+                        title: 'Error!',
+                        text: '{{ session('error') }}',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                @endif
+            });
+
+            // Function to show resi input modal
+            function showResiInputModal(orderId) {
+                var myModal = new bootstrap.Modal(document.getElementById(`resiInputModal${orderId}`));
+                myModal.show();
             }
 
-            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-            element.value = 'Rp ' + rupiah;
-            document.getElementById('price').value = rawValue;
-        }
+            // Function to handle reject payment confirmation
+            function confirmRejectPayment(orderId) {
+                Swal.fire({
+                    title: 'Konfirmasi Penolakan',
+                    text: "Apakah Anda yakin ingin menolak pembayaran ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Tolak!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById(`rejectPaymentForm${orderId}`).submit();
+                    }
+                });
+            }
 
-        function confirmRejectPayment(orderId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to reject the payment for this order.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, reject it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('rejectPaymentForm' + orderId).submit();
+            // Function to handle cancel order confirmation
+            function confirmCancelOrder(orderId) {
+                Swal.fire({
+                    title: 'Konfirmasi Pembatalan',
+                    text: "Apakah Anda yakin ingin membatalkan pesanan ini?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Batalkan!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById(`cancelOrderForm${orderId}`).submit();
+                    }
+                });
+            }
+
+            // Function to copy resi code to clipboard
+            function copyResiCode(resiCode) {
+                navigator.clipboard.writeText(resiCode).then(function() {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Nomor resi berhasil disalin',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }).catch(function() {
+                    // Fallback for older browsers
+                    const tempInput = document.createElement('input');
+                    tempInput.value = resiCode;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Nomor resi berhasil disalin',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                });
+            }
+
+            // Format rupiah function
+            function formatRupiah(angka) {
+                var number_string = angka.toString().replace(/[^,\d]/g, ''),
+                    split = number_string.split(','),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return 'Rp ' + rupiah;
+            }
+
+            // Add loading state to submit buttons
+            $('form').on('submit', function() {
+                const submitBtn = $(this).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+                submitBtn.prop('disabled', true)
+                    .html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
+
+                setTimeout(() => {
+                    submitBtn.prop('disabled', false).html(originalText);
+                }, 3000);
+            });
+
+            // Validate resi code input
+            $('input[name="resi_code"]').on('input', function() {
+                const minLength = 5;
+                const value = $(this).val();
+                const errorDiv = $(this).siblings('.invalid-feedback');
+
+                if (value.length < minLength) {
+                    $(this).addClass('is-invalid');
+                    if (!errorDiv.length) {
+                        $(this).after(`<div class="invalid-feedback">Nomor resi minimal ${minLength} karakter</div>`);
+                    }
+                } else {
+                    $(this).removeClass('is-invalid');
+                    errorDiv.remove();
                 }
             });
-        }
 
-        function confirmCancelOrder(orderId) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to cancel this order.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, cancel it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('cancelOrderForm' + orderId).submit();
+            // Handle search form
+            $('#searchForm').on('submit', function(e) {
+                const searchInput = $(this).find('input[name="search"]');
+                if (searchInput.val().trim() === '') {
+                    e.preventDefault();
+                    searchInput.focus();
+                    Swal.fire({
+                        title: 'Perhatian',
+                        text: 'Silakan masukkan kata kunci pencarian',
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    });
                 }
             });
-        }
-    </script>
+        </script>
+    @endpush
 @endsection

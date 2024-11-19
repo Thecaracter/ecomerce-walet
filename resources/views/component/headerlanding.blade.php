@@ -25,26 +25,40 @@
                                         </a>
                                     </li>
                                     @auth
-                                        <li class="nav-item d-flex align-items-center me-3">
-                                            <!-- Gambar Profil -->
-                                            <img src="{{ Auth::user()->photo ? asset('foto/profile/' . Auth::user()->photo) : asset('foto/profile/2.jpg') }}"
-                                                class="rounded-circle me-2 profile-photo" alt="User Photo"
-                                                style="width: 40px; height: 40px;">
+                                        <li>
+                                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+                                                id="profileDropdown" role="button" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <!-- Gambar Profil -->
+                                                <img src="{{ Auth::user()->photo ? asset('foto/profile/' . Auth::user()->photo) : asset('foto/profile/2.jpg') }}"
+                                                    class="rounded-circle me-2 profile-photo" alt="User Photo"
+                                                    style="width: 40px; height: 40px;">
 
-                                            <!-- Nama Pengguna -->
-                                            <span class="font-weight-bold text-dark">
-                                                {{ Auth::user()->name }}
-                                            </span>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('logout') }}"
-                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                Logout
+                                                <!-- Nama Pengguna -->
+                                                <span class="font-weight-bold text-dark">
+                                                    {{ Auth::user()->name }}
+                                                </span>
                                             </a>
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                style="display: none;">
-                                                @csrf
-                                            </form>
+                                            <ul class="submenu">
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">Profile </a>
+
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('user.riwayat') }}">Riwayat </a>
+
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                        Logout
+                                                    </a>
+                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                    </form>
+                                                </li>
+                                            </ul>
                                         </li>
                                     @else
                                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a>

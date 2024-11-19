@@ -104,6 +104,15 @@
             format: 'HH.MM'
         });
     </script>
+    <style>
+        .modal-backdrop {
+            z-index: 1040;
+        }
+
+        .modal-content {
+            z-index: 1050;
+        }
+    </style>
 </body>
 
 </html>

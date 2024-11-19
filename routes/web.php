@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AboutController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\PaymenController;
@@ -12,6 +12,9 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\user\HomeController;
+use App\Http\Controllers\RiwayatLandingController;
+use App\Http\Controllers\user\UserProfileController;
+use App\Http\Controllers\user\UserRiwayatController;
 use App\Http\Controllers\user\ProductControllerLanding;
 
 /*
@@ -44,6 +47,9 @@ Route::get('/products/search', [ProductControllerLanding::class, 'search'])->nam
 // About routes
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 
+// Riwayat routes
+
+
 // Cart routes
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -66,6 +72,16 @@ Route::get('/payment', [PaymenController::class, 'index'])->name('payment.index'
 Route::post('/order/update-status-proses', [PaymenController::class, 'updateStatusToProses'])->name('order.updateStatusProses');
 Route::post('/payment/callback', [PaymenController::class, 'paymentCallback']);
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('user/riwayat', [UserRiwayatController::class, 'index'])->name('user.riwayat');
+    Route::post('user/riwayat/{id}/terima', [UserRiwayatController::class, 'terima'])->name('order.terima');
+});
+
+
+Route::get('/profile', [UserProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+
+
 // Terapkan middleware 'check.is.logged.in' untuk memastikan pengguna terautentikasi
 Route::middleware(['check.is.logged.in'])->group(function () {
     // Dashboard routes
@@ -84,5 +100,7 @@ Route::middleware(['check.is.logged.in'])->group(function () {
 
     // Riwayat routes
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
+
 
 });

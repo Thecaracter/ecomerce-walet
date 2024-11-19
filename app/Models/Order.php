@@ -17,6 +17,8 @@ class Order extends Model
         'status',
         'alamat_pengiriman',
         'pengiriman',
+        'resi_code',
+        'received_at'
     ];
 
     /**

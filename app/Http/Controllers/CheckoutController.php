@@ -18,7 +18,7 @@ class CheckoutController extends Controller
 
         // Generate the order number
         $lastOrder = Order::orderBy('id', 'desc')->first();
-        $orderNumber = 'ORDhjhkui-' . ($lastOrder ? $lastOrder->id + 1 : 1);
+        $orderNumber = 'ORDdhdashjqu1sad-' . ($lastOrder ? $lastOrder->id + 1 : 1);
 
         // Start a transaction
         DB::beginTransaction();
