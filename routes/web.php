@@ -13,9 +13,11 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\user\HomeController;
 use App\Http\Controllers\RiwayatLandingController;
+use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\user\UserProfileController;
 use App\Http\Controllers\user\UserRiwayatController;
 use App\Http\Controllers\user\ProductControllerLanding;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,22 @@ Route::post('/login', [AuthController::class, 'login'])->name('auth-login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('auth-register');
+
+Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.request');
+
+Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.email');
+
+Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+Route::post('reset-password', [NewPasswordController::class, 'store'])
+    ->middleware('guest')
+    ->name('password.update');
 
 
 

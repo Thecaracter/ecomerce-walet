@@ -191,7 +191,7 @@
                         return;
                     @else
                         // Jika belum login, tampilkan SweetAlert
-                        event.preventDefault(); // Mencegah navigasi default
+                        event.preventDefault();
                         Swal.fire({
                             icon: 'warning',
                             title: 'Perhatian',
@@ -202,7 +202,7 @@
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 window.location.href =
-                                    '{{ route('login') }}'; // Arahkan ke halaman login
+                                    '{{ route('login') }}';
                             }
                         });
                     @endauth

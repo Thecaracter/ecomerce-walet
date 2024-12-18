@@ -77,62 +77,76 @@
 
             // Add to cart functionality
             document.querySelectorAll('.add-to-cart').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const name = this.getAttribute('data-name');
-                    const price = this.getAttribute('data-price');
-                    const foto = this.getAttribute('data-foto');
-                    const berat = this.getAttribute('data-berat'); // Include berat
-
-                    fetch('{{ route('cart.add') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                id,
-                                name,
-                                price,
-                                foto,
-                                berat // Include berat
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: data.success,
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
+                    button.addEventListener('click', function() {
+                            @auth
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const price = this.getAttribute('data-price');
+                            const foto = this.getAttribute('data-foto');
+                            const berat = this.getAttribute('data-berat');
+                            fetch('{{ route('cart.add') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        id,
+                                        name,
+                                        price,
+                                        foto,
+                                        berat
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: data.success,
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        @else
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Login Diperlukan',
+                                text: 'Anda harus login terlebih dahulu untuk menambahkan produk!',
+                                showCancelButton: true,
+                                confirmButtonText: 'Login Sekarang',
+                                cancelButtonText: 'Nanti Saja'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '{{ route('login') }}';
+                                }
+                            });
+                        @endauth
+                    });
             });
 
-            // Handle search input
-            document.getElementById('search-form').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const query = document.getElementById('search-input').value;
+        // Handle search input
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const query = document.getElementById('search-input').value;
 
-                fetch('{{ route('products.search') }}?query=' + encodeURIComponent(query))
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(products => {
-                        const container = document.getElementById('product-container');
-                        container.innerHTML = ''; // Clear current results
+            fetch('{{ route('products.search') }}?query=' + encodeURIComponent(query))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    const container = document.getElementById('product-container');
+                    container.innerHTML = ''; // Clear current results
 
-                        products.forEach(product => {
-                            const card = document.createElement('div');
-                            card.className = 'col-12 col-sm-6 col-md-4 col-lg-3 mb-4';
-                            card.innerHTML = `
+                    products.forEach(product => {
+                        const card = document.createElement('div');
+                        card.className = 'col-12 col-sm-6 col-md-4 col-lg-3 mb-4';
+                        card.innerHTML = `
                                 <div class="card"
                                     style="border: 2px solid #ed736d; border-radius: .25rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);">
                                     <img src="{{ asset('foto/product/') }}/${product.foto}" class="card-img-top"
@@ -155,58 +169,58 @@
                                     </div>
                                 </div>
                             `;
-                            container.appendChild(card);
-                        });
-
-                        // Reformat the price elements
-                        document.querySelectorAll('.price').forEach(element => {
-                            const rawPrice = parseFloat(element.getAttribute('data-price'));
-                            element.textContent = formatter.format(rawPrice);
-                        });
-
-                        // Re-add add-to-cart functionality
-                        document.querySelectorAll('.add-to-cart').forEach(button => {
-                            button.addEventListener('click', function() {
-                                const id = this.getAttribute('data-id');
-                                const name = this.getAttribute('data-name');
-                                const price = this.getAttribute('data-price');
-                                const foto = this.getAttribute('data-foto');
-                                const berat = this.getAttribute(
-                                    'data-berat'); // Include berat
-
-                                fetch('{{ route('cart.add') }}', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                        },
-                                        body: JSON.stringify({
-                                            id,
-                                            name,
-                                            price,
-                                            foto,
-                                            berat // Include berat
-                                        })
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.success) {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Success',
-                                                text: data.success,
-                                                confirmButtonText: 'OK'
-                                            });
-                                        }
-                                    })
-                                    .catch(error => console.error('Error:', error));
-                            });
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
+                        container.appendChild(card);
                     });
-            });
+
+                    // Reformat the price elements
+                    document.querySelectorAll('.price').forEach(element => {
+                        const rawPrice = parseFloat(element.getAttribute('data-price'));
+                        element.textContent = formatter.format(rawPrice);
+                    });
+
+                    // Re-add add-to-cart functionality
+                    document.querySelectorAll('.add-to-cart').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const price = this.getAttribute('data-price');
+                            const foto = this.getAttribute('data-foto');
+                            const berat = this.getAttribute(
+                                'data-berat'); // Include berat
+
+                            fetch('{{ route('cart.add') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        id,
+                                        name,
+                                        price,
+                                        foto,
+                                        berat // Include berat
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: data.success,
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
         });
     </script>
 @endsection

@@ -57,6 +57,9 @@
                     <div class="mt-5 text-muted text-center">
                         Don't have an account? <a href="{{ route('register') }}">Create One</a>
                     </div>
+                    <div class="mt-2 text-muted text-center">
+                        <a href="{{ route('password.request') }}">Lupa Password?</a>
+                    </div>
                 </div>
             </div>
         </div>

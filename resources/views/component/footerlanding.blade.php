@@ -8,9 +8,17 @@
                             Contact Us
                         </h3>
                         <ul class="address_line">
-                            <li>+555 0000 565</li>
-                            <li><a href="#">Demomail@gmail.Com</a></li>
-                            <li>700, Green Lane, New York, USA</li>
+                            <li>
+                                <a href="https://wa.me/6281279317124" target="_blank"
+                                    class="d-flex align-items-center text-decoration-none"
+                                    style="color: #25D366; padding: 10px 15px; border-radius: 5px; transition: background-color 0.3s;">
+                                    <i class="fab fa-whatsapp" style="margin-right: 8px;"></i>
+                                    +628127369167
+                                </a>
+                            </li>
+                            <li><a href="#">pasakrorasakti@gmail.Com</a></li>
+                            <li>3P6R+6JW Pas, Jl. Brigjen Dr. H. Noesmir Lorong Swadarma, Sukajaya, Kec. Sukarami, Kota
+                                Palembang, Sumatera Selatan</li>
                         </ul>
                     </div>
                 </div>
@@ -21,8 +29,8 @@
                                 <img src="user/img/logo.png" alt="">
                             </a>
                         </div>
-                        <p class="address_text">239 E 5th St, New York
-                            NY 10003, USA
+                        <p class="address_text">3P6R+6JW Pas, Jl. Brigjen Dr. H. Noesmir Lorong Swadarma, Sukajaya, Kec.
+                            Sukarami, Kota Palembang, Sumatera Selatan
                         </p>
                         <div class="socail_links">
                             <ul>
@@ -54,7 +62,7 @@
                 <div class="col-xl-6 col-md-12 col-lg-6">
                     <div class="maps-container">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.8545917130237!2d-73.9927326!3d40.7279429!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2599bd9e7e237%3A0x7e41b5c442cc4ba4!2s239%20E%205th%20St%2C%20New%20York%2C%20NY%2010003%2C%20USA!5e0!3m2!1sen!2sid!4v1637304体验!5m2!1sen!2sid"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.5691232847!2d104.73901877583826!3d-2.939375939669244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e3b7595a4c5bc6b%3A0x9439e4a74c42c3f3!2sAgen%20Jambu%20kristal%20di%20Palembang!5e0!3m2!1sid!2sid!4v1732149789758!5m2!1sid!2sid"
                             width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy">
                         </iframe>
                     </div>

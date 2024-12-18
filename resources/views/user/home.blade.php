@@ -238,7 +238,6 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Create a NumberFormat instance for Indonesian Rupiah without decimals
             const formatter = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
@@ -246,48 +245,65 @@
                 maximumFractionDigits: 0
             });
 
-            // Format all elements with class 'price'
             document.querySelectorAll('.price').forEach(element => {
                 const rawPrice = parseFloat(element.getAttribute('data-price'));
                 element.textContent = formatter.format(rawPrice);
             });
 
-            // Add to cart functionality for product cards
+            // Modifikasi add to cart functionality
             document.querySelectorAll('.add-to-cart').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const name = this.getAttribute('data-name');
-                    const price = this.getAttribute('data-price');
-                    const foto = this.getAttribute('data-foto');
-                    const berat = this.getAttribute('data-berat'); // Include berat
+                    button.addEventListener('click', function(e) {
+                            e.preventDefault();
 
-                    fetch('{{ route('cart.add') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                id,
-                                name,
-                                price,
-                                foto,
-                                berat // Include berat
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: data.success,
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
+                            // Cek status login
+                            @auth
+                            const id = this.getAttribute('data-id');
+                            const name = this.getAttribute('data-name');
+                            const price = this.getAttribute('data-price');
+                            const foto = this.getAttribute('data-foto');
+                            const berat = this.getAttribute('data-berat');
+
+                            fetch('{{ route('cart.add') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                    },
+                                    body: JSON.stringify({
+                                        id,
+                                        name,
+                                        price,
+                                        foto,
+                                        berat
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Success',
+                                            text: data.success,
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => console.error('Error:', error));
+                        @else
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Login Diperlukan',
+                                text: 'Silahkan login terlebih dahulu untuk menambahkan produk ke keranjang',
+                                showCancelButton: true,
+                                confirmButtonText: 'Login Sekarang',
+                                cancelButtonText: 'Nanti Saja'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '{{ route('login') }}';
+                                }
+                            });
+                        @endauth
+                    });
             });
         });
     </script>
